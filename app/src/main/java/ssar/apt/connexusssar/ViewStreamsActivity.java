@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ssar.apt.connexusssar.types.Stream;
+import ssar.apt.connexusssar.util.StreamParser;
 
 
 public class ViewStreamsActivity extends Activity {
     private static final String TAG = ConnexusIntentService.class.getSimpleName();
+    private StreamParser streamParser = new StreamParser();
     private ConnexusRequestReceiver requestReceiver;
 
     @Override
@@ -93,23 +95,10 @@ public class ViewStreamsActivity extends Activity {
             TextView jsonObjectTextView = (TextView) findViewById(R.id.jsonObjectTextView);
             jsonObjectTextView.setText(responseJSON);
 
-            JSONObject json;
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            Gson gson = gsonBuilder.create();
-            List<Stream> streams = new ArrayList<Stream>();
+            List<Stream> streams = streamParser.jsonToStream(responseJSON);
 
-            try {
-                json = new JSONObject(responseJSON);
-
-                JSONArray jsonArray = json.getJSONArray("streamlist");
-                for (int i=0; i<jsonArray.length(); i++) {
-                    Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                    Log.i(TAG, streamObj.toString());
-                    streams.add(streamObj);
-                }
-            } catch (JSONException e) {
-                Log.e("JSON Exception:", e.getStackTrace().toString());
+            for (Stream stream : streams){
+                Log.i(TAG, stream.toString());
             }
         }
     }
