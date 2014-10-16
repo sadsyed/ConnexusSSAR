@@ -11,6 +11,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ssar.apt.connexusssar.types.Stream;
+
 
 public class ViewStreamsActivity extends Activity {
     private static final String TAG = ConnexusIntentService.class.getSimpleName();
@@ -40,7 +51,7 @@ public class ViewStreamsActivity extends Activity {
 
         Log.i(TAG, "Starting ViewAllStreams request");
         Intent msgIntent = new Intent(ViewStreamsActivity.this, ConnexusIntentService.class);
-        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, "http://radiant-anchor-696.appspot.com/ViewAllStreams");
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, "http://sonic-fiber-734.appspot.com/ViewAllStreamsService");
         startService(msgIntent);
     }
 
@@ -80,6 +91,23 @@ public class ViewStreamsActivity extends Activity {
 
             TextView jsonObjectTextView = (TextView) findViewById(R.id.jsonObjectTextView);
             jsonObjectTextView.setText(responseJSON);
+
+            JSONObject json;
+            Gson gson = new Gson();
+            List<Stream> streams = new ArrayList<Stream>();
+
+            try {
+                json = new JSONObject(responseJSON);
+
+                JSONArray jsonArray = json.getJSONArray("streamlist");
+                for (int i=0; i<jsonArray.length(); i++) {
+                    Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
+                    Log.i(TAG, streamObj.toString());
+                    streams.add(streamObj);
+                }
+            } catch (JSONException e) {
+                Log.e("JSON Exception:", e.getStackTrace().toString());
+            }
         }
     }
 }

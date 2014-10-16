@@ -11,6 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,10 +49,11 @@ public class ConnexusIntentService extends IntentService {
 
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                /*ByteArrayOutputStream out = new ByteArrayOutputStream();
                 response.getEntity().writeTo(out);
                 out.close();
-                responseJSON = out.toString();
+                responseJSON = out.toString();*/
+                responseJSON = EntityUtils.toString(response.getEntity());
             } else {
                 Log.w("HTTP1:", statusLine.getReasonPhrase());
                 response.getEntity().getContent().close();
