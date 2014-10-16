@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,7 +94,9 @@ public class ViewStreamsActivity extends Activity {
             jsonObjectTextView.setText(responseJSON);
 
             JSONObject json;
-            Gson gson = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Gson gson = gsonBuilder.create();
             List<Stream> streams = new ArrayList<Stream>();
 
             try {
