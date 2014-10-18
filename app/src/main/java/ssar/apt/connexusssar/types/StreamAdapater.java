@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ssar.apt.connexusssar.R;
+import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 /**
  * Created by ssyed on 10/17/14.
@@ -99,7 +100,7 @@ public class StreamAdapater extends BaseAdapter {
             try {
                 return Drawable.createFromStream((InputStream)new URL(args[0]).getContent(), "src");
             } catch (Exception e) {
-                Log.i("IMG", e.toString());
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e.toString());
             }
             return null;
         }

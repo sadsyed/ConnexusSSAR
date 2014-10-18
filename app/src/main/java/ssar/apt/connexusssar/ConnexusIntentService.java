@@ -15,6 +15,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
+import ssar.apt.connexusssar.util.ConnexusSSARConstants;
+
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -44,7 +46,7 @@ public class ConnexusIntentService extends IntentService {
         //Execute the POST request
         try {
             HttpResponse response = client.execute(post);
-            Log.i(TAG, response.toString());
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, response.toString());
 
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == HttpStatus.SC_OK){
@@ -54,18 +56,18 @@ public class ConnexusIntentService extends IntentService {
                 responseJSON = out.toString();*/
                 responseJSON = EntityUtils.toString(response.getEntity());
             } else {
-                Log.w("HTTP1:", statusLine.getReasonPhrase());
+                Log.w(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, statusLine.getReasonPhrase());
                 response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {
-            Log.w("HTTP ClientProtocolException:", e);
+            Log.w(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e);
             responseJSON = e.getMessage();
         } catch (IOException e) {
-            Log.w("HTTP IoException:", e);
+            Log.w(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e);
             responseJSON = e.getMessage();
         } catch (Exception e) {
-            Log.w("HTTP Exception:", e);
+            Log.w(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e);
             responseJSON = e.getMessage();
         }
 

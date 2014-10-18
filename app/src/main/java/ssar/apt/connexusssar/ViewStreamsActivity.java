@@ -16,6 +16,7 @@ import java.util.List;
 
 import ssar.apt.connexusssar.types.StreamAdapater;
 import ssar.apt.connexusssar.types.Stream;
+import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
 
 
@@ -49,7 +50,7 @@ public class ViewStreamsActivity extends Activity {
         requestReceiver = new ConnexusRequestReceiver();
         registerReceiver(requestReceiver, filter);
 
-        Log.i(TAG, "Starting ViewAllStreams request");
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting ViewAllStreams request");
         Intent msgIntent = new Intent(ViewStreamsActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, "http://sonic-fiber-734.appspot.com/ViewAllStreamsService");
         startService(msgIntent);
@@ -95,7 +96,7 @@ public class ViewStreamsActivity extends Activity {
             List<Stream> streams = streamParser.jsonToStream(responseJSON);
 
             for (Stream stream : streams){
-                Log.i(TAG, stream.toString());
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, stream.toString());
             }
 
             setContentView(R.layout.activity_view_streams);

@@ -33,11 +33,11 @@ public class StreamParser {
             JSONArray jsonArray = json.getJSONArray("streamlist");
             for (int i=0; i<jsonArray.length(); i++) {
                 Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                //Log.i(TAG, streamObj.toString());
+                //Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, streamObj.toString());
                 streams.add(streamObj);
             }
         } catch (JSONException e) {
-            Log.e("JSON Exception:", e.getStackTrace().toString());
+            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e.getStackTrace().toString());
         }
 
         return streams;
