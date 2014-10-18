@@ -9,18 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
+import ssar.apt.connexusssar.types.StreamAdapater;
 import ssar.apt.connexusssar.types.Stream;
 import ssar.apt.connexusssar.util.StreamParser;
 
@@ -29,6 +23,13 @@ public class ViewStreamsActivity extends Activity {
     private static final String TAG = ConnexusIntentService.class.getSimpleName();
     private StreamParser streamParser = new StreamParser();
     private ConnexusRequestReceiver requestReceiver;
+
+    GridView gridView;
+    Context context;
+    List streamName;
+
+    public static String [] listOfStreamNames = {"Sonice", "Flags", "Indian Food"};
+    public static int [] listOfImages = {R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class ViewStreamsActivity extends Activity {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
             Log.i(TAG, responseJSON);
 
-            TextView jsonObjectTextView = (TextView) findViewById(R.id.jsonObjectTextView);
+            TextView jsonObjectTextView = (TextView) findViewById(R.id.viewStreamTitle);
             jsonObjectTextView.setText(responseJSON);
 
             List<Stream> streams = streamParser.jsonToStream(responseJSON);
@@ -100,6 +101,12 @@ public class ViewStreamsActivity extends Activity {
             for (Stream stream : streams){
                 Log.i(TAG, stream.toString());
             }
+
+            setContentView(R.layout.activity_view_streams);
+            gridView = (GridView) findViewById(R.id.viewStreamGridView);
+            //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
+            gridView.setAdapter(new StreamAdapater(context, streams));
         }
     }
+
 }

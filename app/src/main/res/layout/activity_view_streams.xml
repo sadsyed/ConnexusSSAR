@@ -9,9 +9,18 @@
     tools:context="ssar.apt.connexusssar.ViewStreamsActivity">
 
     <TextView
-        android:text="@string/hello_world"
+        android:text="Connexus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/jsonObjectTextView" />
+        android:id="@+id/viewStreamTitle" />
+
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewStreamGridView"
+        android:layout_below="@+id/viewStreamTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:numColumns="4"/>
 
 </RelativeLayout>
