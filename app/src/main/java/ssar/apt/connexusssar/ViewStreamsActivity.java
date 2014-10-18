@@ -26,10 +26,6 @@ public class ViewStreamsActivity extends Activity {
 
     GridView gridView;
     Context context;
-    List streamName;
-
-    public static String [] listOfStreamNames = {"Sonice", "Flags", "Indian Food"};
-    public static int [] listOfImages = {R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
