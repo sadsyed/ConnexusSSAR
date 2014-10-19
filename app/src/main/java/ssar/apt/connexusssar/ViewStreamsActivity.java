@@ -9,9 +9,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import ssar.apt.connexusssar.types.StreamAdapater;
@@ -24,6 +28,7 @@ public class ViewStreamsActivity extends Activity {
     private static final String TAG = ConnexusIntentService.class.getSimpleName();
     private StreamParser streamParser = new StreamParser();
     private ConnexusRequestReceiver requestReceiver;
+    private ConnexusRequestReceiver subscribeRequestReceiver;
 
     GridView gridView;
     Context context;
@@ -47,12 +52,12 @@ public class ViewStreamsActivity extends Activity {
 
         IntentFilter filter = new IntentFilter(ConnexusRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        requestReceiver = new ConnexusRequestReceiver();
+        requestReceiver = new ConnexusRequestReceiver(ConnexusSSARConstants.VIEW_ALL_STREAMS);
         registerReceiver(requestReceiver, filter);
 
         Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting ViewAllStreams request");
         Intent msgIntent = new Intent(ViewStreamsActivity.this, ConnexusIntentService.class);
-        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, "http://sonic-fiber-734.appspot.com/ViewAllStreamsService");
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.VIEW_ALL_STREAMS);
         startService(msgIntent);
     }
 
@@ -82,21 +87,57 @@ public class ViewStreamsActivity extends Activity {
         super.onDestroy();
     }
 
+    /** Called when the user clicks the My Subscribed Streams button */
+    public void loadSubscribedStreams(View view) {
+        unregisterReceiver(requestReceiver);
+        IntentFilter filter = new IntentFilter(ConnexusRequestReceiver.PROCESS_RESPONSE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        subscribeRequestReceiver = new ConnexusRequestReceiver(ConnexusSSARConstants.MANAGE_STREAM);
+        registerReceiver(subscribeRequestReceiver, filter);
+
+        //set the JSON request object
+        JSONObject requestJSON = new JSONObject();
+        try {
+            //TODO: Remove the hardcoded userid
+            requestJSON.put("userid", "sh.sadaf@gmail.com");
+        } catch (Exception e) {
+            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Exception while creating an request JSON.");
+        }
+
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting ManageStreams request");
+        Intent msgIntent = new Intent(ViewStreamsActivity.this, ConnexusIntentService.class);
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.MANAGE_STREAM);
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
+        startService(msgIntent);
+    }
+
     public class ConnexusRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
+        private String serviceUrl;
+
+        public ConnexusRequestReceiver (String serviceUrl) {
+            this.serviceUrl = serviceUrl;
+        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
-            Log.i(TAG, responseJSON);
+            //Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service response JSON: " + responseJSON);
 
             TextView jsonObjectTextView = (TextView) findViewById(R.id.viewStreamTitle);
             jsonObjectTextView.setText(responseJSON);
 
-            List<Stream> streams = streamParser.jsonToStream(responseJSON);
+            List<Stream> allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
 
-            for (Stream stream : streams){
-                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, stream.toString());
+            //truncate streams to 16 streams
+            List<Stream> streams = new ArrayList<Stream>();
+            int streamCounter = 0;
+            for (Stream streamItem : allStreams) {
+                if(streamCounter < 16) {
+                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, String.valueOf(streamCounter) + ": " + streamItem.toString());
+                    streams.add(streamItem);
+                }
+                streamCounter++;
             }
 
             setContentView(R.layout.activity_view_streams);
@@ -105,5 +146,4 @@ public class ViewStreamsActivity extends Activity {
             gridView.setAdapter(new StreamAdapater(context, streams));
         }
     }
-
 }

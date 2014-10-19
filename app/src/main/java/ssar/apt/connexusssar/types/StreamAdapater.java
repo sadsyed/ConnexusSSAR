@@ -68,12 +68,12 @@ public class StreamAdapater extends BaseAdapter {
 
         //load the stream cover image using cover url
         LoadImage loadImage = new LoadImage(holder.imageView);
-        loadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, streams.get(position).getCoverURL());
+        loadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, streams.get(position).getCoverurl());
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "You clicked " + streams.get(position).getStreamName(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -98,6 +98,7 @@ public class StreamAdapater extends BaseAdapter {
         @Override
         protected Drawable doInBackground(String... args) {
             try {
+                //Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Processing stream: " + new URL(args[0]).getContent().toString());
                 return Drawable.createFromStream((InputStream)new URL(args[0]).getContent(), "src");
             } catch (Exception e) {
                 Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e.toString());

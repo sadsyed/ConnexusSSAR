@@ -20,7 +20,7 @@ import ssar.apt.connexusssar.types.Stream;
 public class StreamParser {
     private static final String TAG = StreamParser.class.getSimpleName();
 
-    public List<Stream> jsonToStream(String responseJSON){
+    public List<Stream> jsonToStream(String serviceUrl, String responseJSON){
         JSONObject json;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -28,12 +28,23 @@ public class StreamParser {
         List<Stream> streams = new ArrayList<Stream>();
 
         try {
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Request URL: " + serviceUrl);
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Response JSON: " + responseJSON);
+
             json = new JSONObject(responseJSON);
 
-            JSONArray jsonArray = json.getJSONArray("streamlist");
+            JSONArray jsonArray = new JSONArray();
+
+            if(ConnexusSSARConstants.VIEW_ALL_STREAMS.equals(serviceUrl)) {
+                jsonArray = json.getJSONArray("streamlist");
+            } else if (ConnexusSSARConstants.MANAGE_STREAM.equals(serviceUrl)) {
+                jsonArray = json.getJSONArray("'subscribedstreamlist'");
+            }
+
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Parse stream JSON to Java stream object:");
             for (int i=0; i<jsonArray.length(); i++) {
                 Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                //Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, streamObj.toString());
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, streamObj.toString());
                 streams.add(streamObj);
             }
         } catch (JSONException e) {
