@@ -9,48 +9,48 @@ import java.util.List;
  * Created by ssyed on 10/15/14.
  */
 public class Stream {
-    private String streamName;
+    private String streamname;
     @SerializedName("date")
-    private Date creationDate;
+    private Date creationdate;
     //private List<ViewDate> viewDateList;
     private String owner;
-    private String subMessage;
+    private String submessage;
     private List<String> subscribers;
-    private List<String> tagList;
-    private String coverURL;
-    private List<String> commentList;
+    private List<String> taglist;
+    private String coverurl;
+    private List<String> commentlist;
    //private List<Images> imageList;
 
     public String getStreamName() {
-        return streamName;
+        return streamname;
     }
 
     public void setStreamName(String streamName) {
-        this.streamName = streamName;
+        this.streamname = streamName;
     }
 
-    public String getCoverURL() {
-        return coverURL;
+    public String getCoverurl() {
+        return coverurl;
     }
 
-    public void setCoverURL(String coverURL) {
-        this.coverURL = coverURL;
+    public void setCoverurl(String coverurl) {
+        this.coverurl = coverurl;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getCreationdate() {
+        return creationdate;
     }
 
-    public String getSubMessage() {
-        return subMessage;
+    public String getSubmessage() {
+        return submessage;
     }
 
-    public void setSubMessage(String subMessage) {
-        this.subMessage = subMessage;
+    public void setSubmessage(String submessage) {
+        this.submessage = submessage;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setCreationdate(Date creationdate) {
+        this.creationdate = creationdate;
     }
 
     public String getOwner() {
@@ -61,20 +61,20 @@ public class Stream {
         this.owner = owner;
     }
 
-    public List<String> getCommentList() {
-        return commentList;
+    public List<String> getCommentlist() {
+        return commentlist;
     }
 
-    public void setCommentList(List<String> commentList) {
-        this.commentList = commentList;
+    public void setCommentlist(List<String> commentlist) {
+        this.commentlist = commentlist;
     }
 
-    public List<String> getTagList() {
-        return tagList;
+    public List<String> getTaglist() {
+        return taglist;
     }
 
-    public void setTagList(List<String> tagList) {
-        this.tagList = tagList;
+    public void setTaglist(List<String> taglist) {
+        this.taglist = taglist;
     }
 
     public List<String> getSubscribers() {
@@ -87,7 +87,7 @@ public class Stream {
 
     public String toString() {
         StringBuilder streamString = new StringBuilder();
-        streamString.append("Stream Name: " + streamName + ", Creation Date: " + creationDate + ", Owner: " + owner  + ", SubMessage: " + subMessage + ", Cover URL: " + coverURL);
+        streamString.append("Stream Name: " + streamname + ", Creation Date: " + creationdate + ", Owner: " + owner  + ", SubMessage: " + submessage + ", Cover URL: " + coverurl);
         if (subscribers != null) {
             StringBuilder subscriberString = new StringBuilder();
             subscriberString.append("{");
@@ -97,19 +97,19 @@ public class Stream {
             subscriberString.append("}");
             streamString.append(", Subscribers: " + subscriberString.toString());
         }
-        if(tagList != null) {
+        if(taglist != null) {
             StringBuilder tagListString = new StringBuilder();
             tagListString.append("{");
-            for (String tag : tagList) {
+            for (String tag : taglist) {
                 tagListString.append(tag).append(", ");
             }
             tagListString.append("}");
             streamString.append(", Tags: " + tagListString.toString());
         }
-        if(commentList != null) {
+        if(commentlist != null) {
             StringBuilder commentListString = new StringBuilder();
             commentListString.append("{");
-            for (String comment : commentList) {
+            for (String comment : commentlist) {
                 commentListString.append(comment).append(", ");
             }
             commentListString.append("}");
