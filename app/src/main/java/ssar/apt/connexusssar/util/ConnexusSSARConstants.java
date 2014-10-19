@@ -5,6 +5,7 @@ package ssar.apt.connexusssar.util;
  */
 public class ConnexusSSARConstants {
     public static final String CONNEXUSSSAR_DEBUG_TAG = "CONEXUSSSSAR_DEBUG";
-    public static final String VIEW_ALL_STREAMS = "http://sonic-fiber-734.appspot.com/ViewAllStreamsService";
-    public static final String MANAGE_STREAM = "http://sonic-fiber-734.appspot.com/ManageStream";
+    public static final String APP_SPOT = "http://sonic-fiber-734.appspot.com";
+    public static final String VIEW_ALL_STREAMS = APP_SPOT + "/ViewAllStreamsService";
+    public static final String MANAGE_STREAM = APP_SPOT + "/ManageStream";
 }
