@@ -88,31 +88,33 @@ public class Stream {
     public String toString() {
         StringBuilder streamString = new StringBuilder();
         streamString.append("Stream Name: " + streamName + ", Creation Date: " + creationDate + ", Owner: " + owner  + ", SubMessage: " + subMessage + ", Cover URL: " + coverURL);
-
-        StringBuilder subscriberString = new StringBuilder();
-        subscriberString.append("{");
-        for (String subscriber : subscribers){
-            subscriberString.append(subscriber).append(", ");
+        if (subscribers != null) {
+            StringBuilder subscriberString = new StringBuilder();
+            subscriberString.append("{");
+            for (String subscriber : subscribers) {
+                subscriberString.append(subscriber).append(", ");
+            }
+            subscriberString.append("}");
+            streamString.append(", Subscribers: " + subscriberString.toString());
         }
-        subscriberString.append("}");
-        streamString.append(", Subscribers: " + subscriberString.toString());
-
-        StringBuilder tagListString = new StringBuilder();
-        tagListString.append("{");
-        for (String tag : tagList){
-            tagListString.append(tag).append(", ");
+        if(tagList != null) {
+            StringBuilder tagListString = new StringBuilder();
+            tagListString.append("{");
+            for (String tag : tagList) {
+                tagListString.append(tag).append(", ");
+            }
+            tagListString.append("}");
+            streamString.append(", Tags: " + tagListString.toString());
         }
-        tagListString.append("}");
-        streamString.append(", Tags: " + tagListString.toString());
-
-        StringBuilder commentListString = new StringBuilder();
-        commentListString.append("{");
-        for (String comment : commentList){
-            commentListString.append(comment).append(", ");
+        if(commentList != null) {
+            StringBuilder commentListString = new StringBuilder();
+            commentListString.append("{");
+            for (String comment : commentList) {
+                commentListString.append(comment).append(", ");
+            }
+            commentListString.append("}");
+            streamString.append(", Comments List: " + commentListString.toString());
         }
-        commentListString.append("}");
-        streamString.append(", Comments List: " + commentListString.toString());
-
         return(streamString.toString());
     }
 }
