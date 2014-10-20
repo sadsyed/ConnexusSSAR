@@ -1,7 +1,9 @@
 package ssar.apt.connexusssar.types;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,13 +21,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ssar.apt.connexusssar.ConnexusIntentService;
+import ssar.apt.connexusssar.MainActivity;
 import ssar.apt.connexusssar.R;
+import ssar.apt.connexusssar.ViewStreamsActivity;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 /**
  * Created by ssyed on 10/17/14.
  */
 public class StreamAdapater extends BaseAdapter {
+    public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
+
     Context context;
     List<Stream> streams = new ArrayList<Stream>();
     ProgressDialog progressDialog;
@@ -73,7 +80,7 @@ public class StreamAdapater extends BaseAdapter {
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
             }
         });
 

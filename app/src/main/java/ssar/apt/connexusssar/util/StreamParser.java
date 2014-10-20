@@ -32,14 +32,24 @@ public class StreamParser {
             Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Response JSON: " + responseJSON);
 
             json = new JSONObject(responseJSON);
-
             JSONArray jsonArray = new JSONArray();
 
-            if(ConnexusSSARConstants.VIEW_ALL_STREAMS.equals(serviceURL)) {
+            switch(serviceURL) {
+                case ConnexusSSARConstants.VIEW_ALL_STREAMS:
+                    jsonArray = json.getJSONArray("streamlist");
+                    break;
+                case ConnexusSSARConstants.MANAGE_STREAM:
+                    jsonArray = json.getJSONArray("subscribedstreamlist");
+                    break;
+                default:
+                    break;
+            }
+
+           /* if(ConnexusSSARConstants.VIEW_ALL_STREAMS.equals(serviceURL)) {
                 jsonArray = json.getJSONArray("streamlist");
             } else if (ConnexusSSARConstants.MANAGE_STREAM.equals(serviceURL)) {
                 jsonArray = json.getJSONArray("subscribedstreamlist");
-            }
+            }*/
 
             Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Parse stream JSON to Java stream object:");
             for (int i=0; i<jsonArray.length(); i++) {
