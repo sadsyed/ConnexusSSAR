@@ -64,7 +64,7 @@ public class StreamAdapater extends BaseAdapter {
         holder.imageView = (ImageView) rowView.findViewById(R.id.coverImage);
 
         //load the stream name
-        holder.textView.setText(streams.get(position).getStreamName());
+        holder.textView.setText(streams.get(position).getStreamname());
 
         //load the stream cover image using cover url
         LoadImage loadImage = new LoadImage(holder.imageView);
@@ -73,7 +73,7 @@ public class StreamAdapater extends BaseAdapter {
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Toast.makeText(context, "You clicked " + streams.get(position).getStreamName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
             }
         });
 
