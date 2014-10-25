@@ -20,6 +20,36 @@ import ssar.apt.connexusssar.types.Stream;
 public class StreamParser {
     private static final String CLASSNAME = StreamParser.class.getSimpleName();
 
+    public Stream jsonToSingleStream(String serviceURL, String responseJSON) {
+        JSONObject json;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Gson gson = gsonBuilder.create();
+        Stream stream = new Stream();
+
+        try {
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Request URL: " + serviceURL);
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Response JSON: " + responseJSON);
+
+            json = new JSONObject(responseJSON);
+
+            switch(serviceURL) {
+                case ConnexusSSARConstants.VIEW_ASTREAM:
+                    json = json.getJSONObject("stream");
+                    break;
+                default:
+                    break;
+            }
+
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Parse stream JSON to Java stream object:");
+            stream = gson.fromJson(json.toString(), Stream.class);
+        } catch (JSONException e) {
+            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + e);
+        }
+
+        return stream;
+    }
+
     public List<Stream> jsonToStream(String serviceURL, String responseJSON){
         JSONObject json;
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -33,6 +63,7 @@ public class StreamParser {
 
             json = new JSONObject(responseJSON);
             JSONArray jsonArray = new JSONArray();
+
 
             switch(serviceURL) {
                 case ConnexusSSARConstants.VIEW_ALL_STREAMS:
@@ -50,12 +81,15 @@ public class StreamParser {
             } else if (ConnexusSSARConstants.MANAGE_STREAM.equals(serviceURL)) {
                 jsonArray = json.getJSONArray("subscribedstreamlist");
             }*/
-
             Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Parse stream JSON to Java stream object:");
-            for (int i=0; i<jsonArray.length(); i++) {
-                Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + streamObj.toString());
-                streams.add(streamObj);
+            if(jsonArray.length() > 0 ) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
+                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + streamObj.toString());
+                    streams.add(streamObj);
+                }
+            } else {
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "jsonArray empty.");
             }
         } catch (JSONException e) {
             Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + e);
