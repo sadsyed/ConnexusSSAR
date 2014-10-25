@@ -1,7 +1,10 @@
 package ssar.apt.connexusssar.types;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ssar.apt.connexusssar.R;
+import ssar.apt.connexusssar.ViewAStreamActivity;
+import ssar.apt.connexusssar.ViewStreamsActivity;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 /**
@@ -74,6 +79,10 @@ public class StreamAdapater extends BaseAdapter {
             @Override
             public void onClick(View v) {
             Toast.makeText(context, "You clicked " + streams.get(position).getStreamName(), Toast.LENGTH_LONG).show();
+            //Need to launch the stream activity here.
+            Intent intent = new Intent(this, ViewAStreamActivity.class);
+             intent.putExtra(EXTRA_MESSAGE, "View A Stream Activity Test");
+            startActivity(intent);
             }
         });
 

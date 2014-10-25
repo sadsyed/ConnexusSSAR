@@ -8,8 +8,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:largeHeap="true" >
+        android:largeHeap="true"
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -33,6 +33,15 @@
             android:name=".ConnexusIntentService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".ViewAStreamActivity"
+            android:label="@string/title_activity_view_astream"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ssar.apt.connexusssar.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
