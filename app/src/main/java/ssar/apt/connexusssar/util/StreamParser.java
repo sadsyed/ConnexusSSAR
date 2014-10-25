@@ -18,9 +18,9 @@ import ssar.apt.connexusssar.types.Stream;
  * Created by ssyed on 10/16/14.
  */
 public class StreamParser {
-    private static final String TAG = StreamParser.class.getSimpleName();
+    private static final String CLASSNAME = StreamParser.class.getSimpleName();
 
-    public List<Stream> jsonToStream(String serviceUrl, String responseJSON){
+    public List<Stream> jsonToStream(String serviceURL, String responseJSON){
         JSONObject json;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -28,27 +28,37 @@ public class StreamParser {
         List<Stream> streams = new ArrayList<Stream>();
 
         try {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Request URL: " + serviceUrl);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Response JSON: " + responseJSON);
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Request URL: " + serviceURL);
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Response JSON: " + responseJSON);
 
             json = new JSONObject(responseJSON);
-
             JSONArray jsonArray = new JSONArray();
 
-            if(ConnexusSSARConstants.VIEW_ALL_STREAMS.equals(serviceUrl)) {
-                jsonArray = json.getJSONArray("streamlist");
-            } else if (ConnexusSSARConstants.MANAGE_STREAM.equals(serviceUrl)) {
-                jsonArray = json.getJSONArray("'subscribedstreamlist'");
+            switch(serviceURL) {
+                case ConnexusSSARConstants.VIEW_ALL_STREAMS:
+                    jsonArray = json.getJSONArray("streamlist");
+                    break;
+                case ConnexusSSARConstants.MANAGE_STREAM:
+                    jsonArray = json.getJSONArray("subscribedstreamlist");
+                    break;
+                default:
+                    break;
             }
 
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Parse stream JSON to Java stream object:");
+           /* if(ConnexusSSARConstants.VIEW_ALL_STREAMS.equals(serviceURL)) {
+                jsonArray = json.getJSONArray("streamlist");
+            } else if (ConnexusSSARConstants.MANAGE_STREAM.equals(serviceURL)) {
+                jsonArray = json.getJSONArray("subscribedstreamlist");
+            }*/
+
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Parse stream JSON to Java stream object:");
             for (int i=0; i<jsonArray.length(); i++) {
                 Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, streamObj.toString());
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + streamObj.toString());
                 streams.add(streamObj);
             }
         } catch (JSONException e) {
-            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, e.getStackTrace().toString());
+            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + e);
         }
 
         return streams;

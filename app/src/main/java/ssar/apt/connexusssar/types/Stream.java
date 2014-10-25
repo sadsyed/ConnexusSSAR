@@ -21,11 +21,11 @@ public class Stream {
     private List<String> commentlist;
    //private List<Images> imageList;
 
-    public String getStreamName() {
+    public String getStreamname() {
         return streamname;
     }
 
-    public void setStreamName(String streamName) {
+    public void setStreamname(String streamName) {
         this.streamname = streamName;
     }
 

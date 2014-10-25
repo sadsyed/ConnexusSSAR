@@ -9,7 +9,7 @@
     tools:context="ssar.apt.connexusssar.ViewStreamsActivity">
 
     <TextView
-        android:text="Connexus"
+        android:text="@string/connexus_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/viewStreamTitle" />
@@ -28,7 +28,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Subscribed Streams"
+        android:text="@string/subscribed_streams_button_label"
         android:id="@+id/subscribedStreamsButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"

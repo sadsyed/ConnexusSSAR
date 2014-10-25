@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ssar.apt.connexusssar.ConnexusIntentService;
+import ssar.apt.connexusssar.MainActivity;
 import ssar.apt.connexusssar.R;
 import ssar.apt.connexusssar.ViewAStreamActivity;
 import ssar.apt.connexusssar.ViewStreamsActivity;
@@ -31,6 +33,8 @@ import ssar.apt.connexusssar.util.ConnexusSSARConstants;
  * Created by ssyed on 10/17/14.
  */
 public class StreamAdapater extends BaseAdapter {
+    public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
+
     Context context;
     List<Stream> streams = new ArrayList<Stream>();
     ProgressDialog progressDialog;
@@ -69,7 +73,7 @@ public class StreamAdapater extends BaseAdapter {
         holder.imageView = (ImageView) rowView.findViewById(R.id.coverImage);
 
         //load the stream name
-        holder.textView.setText(streams.get(position).getStreamName());
+        holder.textView.setText(streams.get(position).getStreamname());
 
         //load the stream cover image using cover url
         LoadImage loadImage = new LoadImage(holder.imageView);
@@ -83,6 +87,7 @@ public class StreamAdapater extends BaseAdapter {
             Intent intent = new Intent(this, ViewAStreamActivity.class);
              intent.putExtra(EXTRA_MESSAGE, "View A Stream Activity Test");
             startActivity(intent);
+            Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
             }
         });
 

@@ -9,14 +9,14 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:text="@string/hello_world"
+        android:text="@string/connexus_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Streams"
+        android:text="@string/view_streams_button_label"
         android:id="@+id/viewStreamsButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
