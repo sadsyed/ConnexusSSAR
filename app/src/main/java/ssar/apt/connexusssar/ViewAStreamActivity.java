@@ -108,7 +108,8 @@ public class ViewAStreamActivity extends Activity {
 
             //List<Stream> allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
             Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "We GOT this stream: " + stream.toString());
+            List<String> imageUrllist = stream.getImageUrllist();
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Stream received: " + stream.toString());
             //truncate streams to 16 streams
             //List<Stream> streams = new ArrayList<Stream>();
             //int streamCounter = 0;
