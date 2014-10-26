@@ -79,9 +79,6 @@ public class StreamImage {
 
     public String toString() {
         StringBuilder streamImageString = new StringBuilder();
-        private String imagestreamname;
-        private Float imagelatitude;
-        private Float imagelongitude;
         streamImageString.append("Image id: " + imageid + ", Image Filename: " + imagefilename + ", Comments: " + comments  + ", Image File Url: " + imagefileurl + ", Image Creation Date: " + imagecreationdate + ", Image Stream Name: " + imagestreamname + ", Image Latitude: " + Float.toString(imagelatitude) + ", Image Longitude: " + Float.toString(imagelongitude));
         return(streamImageString.toString());
     }

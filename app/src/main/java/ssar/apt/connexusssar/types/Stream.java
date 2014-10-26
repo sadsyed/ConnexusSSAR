@@ -20,7 +20,7 @@ public class Stream {
     private String coverurl;
     private List<String> commentlist;
     private List<String> imageurllist;
-    private List<Image> imagelist;
+    private List<StreamImage> imagelist;
 
     public String getStreamname() {
         return streamname;
