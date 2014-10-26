@@ -92,6 +92,12 @@ public class Stream {
         this.subscribers = subscribers;
     }
 
+    public List<StreamImage> getStreamImageList() { return imagelist;  }
+
+    public void setStreamImageList(List<StreamImage> imagelist) {
+        this.imagelist = imagelist;
+    }
+
     public String toString() {
         StringBuilder streamString = new StringBuilder();
         streamString.append("Stream Name: " + streamname + ", Creation Date: " + creationdate + ", Owner: " + owner  + ", SubMessage: " + submessage + ", Cover URL: " + coverurl);

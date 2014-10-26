@@ -79,7 +79,11 @@ public class StreamImage {
 
     public String toString() {
         StringBuilder streamImageString = new StringBuilder();
-        streamImageString.append("Image id: " + imageid + ", Image Filename: " + imagefilename + ", Comments: " + comments  + ", Image File Url: " + imagefileurl + ", Image Creation Date: " + imagecreationdate + ", Image Stream Name: " + imagestreamname + ", Image Latitude: " + Float.toString(imagelatitude) + ", Image Longitude: " + Float.toString(imagelongitude));
+        streamImageString.append("Image id: " + imageid + ", Image Filename: " + imagefilename);
+        if(comments != null) {
+            streamImageString.append(", Comments: " + comments);
+        }
+        streamImageString.append(", Image File Url: " + imagefileurl + ", Image Creation Date: " + imagecreationdate + ", Image Stream Name: " + imagestreamname);
         return(streamImageString.toString());
     }
 

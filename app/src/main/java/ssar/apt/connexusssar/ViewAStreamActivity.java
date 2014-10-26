@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ssar.apt.connexusssar.types.StreamImage;
+import ssar.apt.connexusssar.types.StreamImageAdapter;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
 import ssar.apt.connexusssar.types.StreamAdapater;
@@ -30,6 +32,9 @@ public class ViewAStreamActivity extends Activity {
     private StreamParser streamParser = new StreamParser();
     private ConnexusViewAStreamRequestReceiver requestReceiver;
     private ConnexusViewAStreamRequestReceiver subscribeRequestReceiver;
+
+    GridView gridView;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,21 +115,24 @@ public class ViewAStreamActivity extends Activity {
             Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
             List<String> imageUrllist = stream.getImageUrllist();
             Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Stream received: " + stream.toString());
-            //truncate streams to 16 streams
-            //List<Stream> streams = new ArrayList<Stream>();
-            //int streamCounter = 0;
-            //for (Stream streamItem : allStreams) {
-            //    if(streamCounter < 16) {
-            //        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, String.valueOf(streamCounter) + ": " + streamItem.toString());
-            //        streams.add(streamItem);
-            //    }
-            //    streamCounter++;
-            //}
+            List<StreamImage> myImages = stream.getStreamImageList();
+            List<StreamImage> shortMyImages = new ArrayList<StreamImage>();
+            if (myImages.size() > 0) {
+                int counter = 0;
+                for(StreamImage streamImageItem : myImages) {
+                    if (counter < 16) {
+                        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
+                        shortMyImages.add(streamImageItem);
+                    }
+                    counter ++;
+                }
+            }
 
-            //setContentView(R.layout.activity_view_streams);
-            //gridView = (GridView) findViewById(R.id.viewStreamGridView);
+
+            setContentView(R.layout.activity_view_astream);
+            gridView = (GridView) findViewById(R.id.viewAStreamGridView);
             //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
-            //gridView.setAdapter(new StreamAdapater(context, streams));
+            gridView.setAdapter(new StreamImageAdapter(context, shortMyImages));
         }
     }
 }
