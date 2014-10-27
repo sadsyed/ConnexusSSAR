@@ -64,6 +64,8 @@ public class StreamParser {
             json = new JSONObject(responseJSON);
             JSONArray jsonArray = new JSONArray();
 
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service url is: " + serviceURL);
+
 
             switch(serviceURL) {
                 case ConnexusSSARConstants.VIEW_ALL_STREAMS:

@@ -29,6 +29,7 @@ public class ViewStreamsActivity extends Activity {
     private StreamParser streamParser = new StreamParser();
     private ConnexusRequestReceiver requestReceiver;
     private ConnexusRequestReceiver subscribeRequestReceiver;
+    private IntentFilter filter;
 
     GridView gridView;
     Context context;
@@ -50,7 +51,7 @@ public class ViewStreamsActivity extends Activity {
         //setContentView(textView);
         setContentView(R.layout.activity_view_streams);
 
-        IntentFilter filter = new IntentFilter(ConnexusRequestReceiver.PROCESS_RESPONSE);
+        filter = new IntentFilter(ConnexusRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         requestReceiver = new ConnexusRequestReceiver(ConnexusSSARConstants.VIEW_ALL_STREAMS);
         registerReceiver(requestReceiver, filter);
@@ -83,8 +84,20 @@ public class ViewStreamsActivity extends Activity {
 
     @Override
     public void onDestroy() {
-        this.unregisterReceiver(requestReceiver);
+        //this.unregisterReceiver(requestReceiver);
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        this.unregisterReceiver(requestReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        this.registerReceiver(requestReceiver, filter);
+        super.onResume();
     }
 
     /** Called when the user clicks the My Subscribed Streams button */

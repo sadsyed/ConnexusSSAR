@@ -32,6 +32,7 @@ public class ViewAStreamActivity extends Activity {
     private StreamParser streamParser = new StreamParser();
     private ConnexusViewAStreamRequestReceiver requestReceiver;
     private ConnexusViewAStreamRequestReceiver subscribeRequestReceiver;
+    IntentFilter filter;
 
     GridView gridView;
     Context context;
@@ -56,7 +57,7 @@ public class ViewAStreamActivity extends Activity {
 
         setContentView(R.layout.activity_view_astream);
 
-        IntentFilter filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
+        filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         requestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.VIEW_ASTREAM);
         registerReceiver(requestReceiver, filter);
@@ -89,12 +90,24 @@ public class ViewAStreamActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onDestroy() {
-        this.unregisterReceiver(requestReceiver);
+        //this.unregisterReceiver(requestReceiver);
         super.onDestroy();
     }
 
+    @Override
+    public void onPause() {
+        this.unregisterReceiver(requestReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        this.registerReceiver(requestReceiver, filter);
+        super.onResume();
+    }
     public class ConnexusViewAStreamRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;
