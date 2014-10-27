@@ -19,7 +19,6 @@ public class Stream {
     private List<String> taglist;
     private String coverurl;
     private List<String> commentlist;
-    private List<String> imageurllist;
     private List<StreamImage> imagelist;
 
     public String getStreamname() {
@@ -78,12 +77,6 @@ public class Stream {
         this.taglist = taglist;
     }
 
-    public void setImageUrllist(List<String> imageurllist) {
-        this.imageurllist = imageurllist;
-    }
-
-    public List<String> getImageUrllist() { return imageurllist;}
-
     public List<String> getSubscribers() {
         return subscribers;
     }
@@ -128,15 +121,7 @@ public class Stream {
             commentListString.append("}");
             streamString.append(", Comments List: " + commentListString.toString());
         }
-        if(imageurllist != null) {
-            StringBuilder imageUrllistString = new StringBuilder();
-            imageUrllistString.append("{");
-            for (String image : imageurllist) {
-                imageUrllistString.append(image).append(", ");
-            }
-            imageUrllistString.append("}");
-            streamString.append(", Image Url List: " + imageUrllistString.toString());
-        }
+
         return(streamString.toString());
     }
 }

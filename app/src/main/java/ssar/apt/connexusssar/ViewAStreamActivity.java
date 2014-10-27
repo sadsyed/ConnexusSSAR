@@ -126,7 +126,6 @@ public class ViewAStreamActivity extends Activity {
 
             //List<Stream> allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
             Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
-            List<String> imageUrllist = stream.getImageUrllist();
             Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Stream received: " + stream.toString());
             List<StreamImage> myImages = stream.getStreamImageList();
             List<StreamImage> shortMyImages = new ArrayList<StreamImage>();
