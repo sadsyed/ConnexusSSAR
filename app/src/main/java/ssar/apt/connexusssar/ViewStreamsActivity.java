@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -126,9 +128,14 @@ public class ViewStreamsActivity extends Activity {
 
     public void searchStreams(View view) {
         //get the find stream name
+        EditText findStreamsEditText = (EditText) findViewById(R.id.findStreamsEditText);
+        String streamQuery = findStreamsEditText.getText().toString();
 
         //launch searchResultsActivity
-
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Launching SearchResults Activity");
+        Intent searchResultActivityIntent = new Intent(this, SearchResultsActivity.class);
+        searchResultActivityIntent.putExtra("streamQuery", streamQuery);
+        this.startActivity(searchResultActivityIntent);
     }
 
     public class ConnexusRequestReceiver extends BroadcastReceiver {
