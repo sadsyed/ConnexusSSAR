@@ -138,6 +138,7 @@ public class ViewAStreamActivity extends Activity {
         this.registerReceiver(requestReceiver, filter);
         super.onResume();
     }
+
     public class ConnexusViewAStreamRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;

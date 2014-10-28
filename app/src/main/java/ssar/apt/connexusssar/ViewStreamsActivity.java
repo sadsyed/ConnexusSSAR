@@ -124,6 +124,13 @@ public class ViewStreamsActivity extends Activity {
         startService(msgIntent);
     }
 
+    public void searchStreams(View view) {
+        //get the find stream name
+
+        //launch searchResultsActivity
+
+    }
+
     public class ConnexusRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;
