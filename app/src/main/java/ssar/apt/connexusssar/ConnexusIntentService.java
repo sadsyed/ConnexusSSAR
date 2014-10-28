@@ -3,7 +3,8 @@ package ssar.apt.connexusssar;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-
+import java.io.File;
+import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -12,9 +13,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+
+
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -59,6 +66,26 @@ public class ConnexusIntentService extends IntentService {
                 StringEntity stringEntity = new StringEntity(requestJSON);
                 stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 post.setEntity(stringEntity);
+            } else if(ConnexusSSARConstants.UPLOAD_FILE.equals(requestURL)) {
+                post.addHeader("Accept", "application/json");
+                post.addHeader("Content-type", "multipart/form-data");
+                //File fileToUse = new File("/path_to_file/YOLO.jpg");
+                //FileBody data = new FileBody(fileToUse);
+
+                //String file_type = "JPG" ;
+                //String description = "Oppa Gangnam Style";
+                //String folder_id = "-1";
+                //String source = "MYCOMPUTER" ;
+
+                MultipartEntity reqEntity = new MultipartEntity();
+                //reqEntity.addPart("file_name", new StringBody( fileToUse.getName() ) );
+                //reqEntity.addPart("folder_id", new StringBody(folder_id));
+                //reqEntity.addPart("description", new StringBody(description));
+                //reqEntity.addPart("source", new StringBody(source));
+                //reqEntity.addPart("file_type", new StringBody(file_type));
+                //reqEntity.addPart("data", data);
+
+                post.setEntity(reqEntity);
             }
 
             //Execute the POST request

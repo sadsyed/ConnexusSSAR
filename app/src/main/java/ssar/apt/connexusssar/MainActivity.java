@@ -1,20 +1,26 @@
 package ssar.apt.connexusssar;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import ssar.apt.connexusssar.util.ConnexusSSARConstants;
+
 
 public class MainActivity extends Activity {
     public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
+    ConnexusLocationService locationservice;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        locationservice = new ConnexusLocationService(this);
     }
 
 
@@ -44,4 +50,7 @@ public class MainActivity extends Activity {
         intent.putExtra(EXTRA_MESSAGE, "View Streams Activity Test");
         startActivity(intent);
     }
+
+
 }
+

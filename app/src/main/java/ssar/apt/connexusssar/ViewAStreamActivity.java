@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +58,10 @@ public class ViewAStreamActivity extends Activity {
         }
 
         setContentView(R.layout.activity_view_astream);
+        double[] myLocation = getGPS();
+        for(double val : myLocation) {
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Location is: " + Double.toString(val));
+        }
 
         filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -69,6 +75,30 @@ public class ViewAStreamActivity extends Activity {
         msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
         startService(msgIntent);
 
+    }
+
+    private double[] getGPS() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = lm.getProviders(true);
+
+        /* Loop over the array backwards, and if you get an accurate location, then break out the loop*/
+        Location l = null;
+
+        for (int i=providers.size()-1; i>=0; i--) {
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Looping over providers.");
+            l = lm.getLastKnownLocation(providers.get(i));
+            if (l != null) break;
+        }
+
+        double[] gps = new double[2];
+        if (l != null) {
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "l is not equal null.");
+            gps[0] = l.getLatitude();
+            gps[1] = l.getLongitude();
+        } else {
+            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "l is equal to null.");
+        }
+        return gps;
     }
 
 
