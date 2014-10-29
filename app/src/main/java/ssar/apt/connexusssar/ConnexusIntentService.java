@@ -36,7 +36,7 @@ import ssar.apt.connexusssar.util.ConnexusSSARConstants;
  * TODO: Customize class - update intent actions and extra parameters.
  */
 public class ConnexusIntentService extends IntentService {
-    private static final String TAG = ConnexusIntentService.class.getSimpleName();
+    private static final String CLASSNAME = ConnexusIntentService.class.getSimpleName();
 
     public static final String REQUEST_URL = "requestURL";
     public static final String REQUEST_JSON = "requestJSON";
@@ -57,8 +57,50 @@ public class ConnexusIntentService extends IntentService {
         HttpPost post = new HttpPost(requestURL);
 
         try {
+            StringEntity stringEntity;
             //Set requestJSON for services which require request input
-            if(requestJSON != null && ConnexusSSARConstants.MANAGE_STREAM.equals(requestURL)) {
+            switch(requestURL) {
+                case ConnexusSSARConstants.MANAGE_STREAM:
+                    stringEntity = new StringEntity(requestJSON);
+                    stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(stringEntity);
+                    break;
+
+                case ConnexusSSARConstants.VIEW_ASTREAM:
+                    stringEntity = new StringEntity(requestJSON);
+                    stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(stringEntity);
+                    break;
+
+                case ConnexusSSARConstants.SEARCH_STREAM:
+                    stringEntity = new StringEntity(requestJSON);
+                    stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(stringEntity);
+                    break;
+
+                case ConnexusSSARConstants.UPLOAD_FILE:
+                    post.addHeader("Accept", "application/json");
+                    post.addHeader("Content-type", "multipart/form-data");
+                    //File fileToUse = new File("/path_to_file/YOLO.jpg");
+                    //FileBody data = new FileBody(fileToUse);
+
+                    //String file_type = "JPG" ;
+                    //String description = "Oppa Gangnam Style";
+                    //String folder_id = "-1";
+                    //String source = "MYCOMPUTER" ;
+
+                    MultipartEntity reqEntity = new MultipartEntity();
+                    //reqEntity.addPart("file_name", new StringBody( fileToUse.getName() ) );
+                    //reqEntity.addPart("folder_id", new StringBody(folder_id));
+                    //reqEntity.addPart("description", new StringBody(description));
+                    //reqEntity.addPart("source", new StringBody(source));
+                    //reqEntity.addPart("file_type", new StringBody(file_type));
+                    //reqEntity.addPart("data", data);
+
+                    post.setEntity(reqEntity);
+                    break;
+            }
+/*            if(requestJSON != null && ConnexusSSARConstants.MANAGE_STREAM.equals(requestURL)) {
                 StringEntity stringEntity = new StringEntity(requestJSON);
                 stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 post.setEntity(stringEntity);
@@ -87,7 +129,7 @@ public class ConnexusIntentService extends IntentService {
 
                 post.setEntity(reqEntity);
             }
-
+*/
             //Execute the POST request
             HttpResponse response = client.execute(post);
 
@@ -98,7 +140,8 @@ public class ConnexusIntentService extends IntentService {
                 out.close();
                 responseJSON = out.toString();*/
                 responseJSON = EntityUtils.toString(response.getEntity());
-                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "ConnexusIntentService response: " + response.toString());
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + "- " + "Response: " + response.toString());
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + "- " +"Response JSON: " + responseJSON.toString());
             } else {
                 Log.w(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, statusLine.getReasonPhrase());
                 response.getEntity().getContent().close();

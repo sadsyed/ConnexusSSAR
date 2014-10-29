@@ -134,7 +134,7 @@ public class ViewStreamsActivity extends Activity {
         //launch searchResultsActivity
         Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Launching SearchResults Activity");
         Intent searchResultActivityIntent = new Intent(this, SearchResultsActivity.class);
-        searchResultActivityIntent.putExtra("streamQuery", streamQuery);
+        searchResultActivityIntent.putExtra(SearchResultsActivity.SEARCH_QUERY, streamQuery);
         this.startActivity(searchResultActivityIntent);
     }
 
