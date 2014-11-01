@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.TextView;
 
 
 import org.json.JSONException;
@@ -283,6 +284,8 @@ public class ViewAStreamActivity extends Activity {
                     }
                 }
                 setContentView(R.layout.activity_view_astream);
+                TextView streamnameTextView = (TextView) findViewById(R.id.viewAStream);
+                streamnameTextView.setText("View A Stream: " + streamname);
                 gridView = (GridView) findViewById(R.id.viewAStreamGridView);
                 gridView.setAdapter(new StreamImageAdapter(context, shortMyImages));
             } catch (Exception e) {
