@@ -34,6 +34,9 @@ public class ViewAStreamActivity extends Activity {
     private ConnexusViewAStreamRequestReceiver redrawRequestReceiver;
     private ConnexusViewAStreamRequestReceiver uploadRequestReceiver;
     private String streamname = "";
+    List<StreamImage> myImages = null;
+    private int displayPicStart = 0;
+    private int displayPicEnd = 16;
     IntentFilter filter;
 
     GridView gridView;
@@ -168,6 +171,18 @@ public class ViewAStreamActivity extends Activity {
         startActivityForResult(Intent.createChooser(intentChooser, "Choose Picture"), 1);
     }
 
+    public void loadMorePictures(View view) {
+        Log.i(TAG, "Load more pictures clicked");
+        if(displayPicEnd < myImages.size()) {
+            displayPicStart = displayPicEnd;
+            displayPicEnd = displayPicStart + 16;
+        } else {
+            displayPicStart = 0;
+            displayPicEnd = 16;
+        }
+        redrawStreams();
+    }
+
     protected void redrawStreams() {
         Intent intent = getIntent();
         Log.i(TAG, "Redrawing streams for stream: " + streamname);
@@ -247,12 +262,12 @@ public class ViewAStreamActivity extends Activity {
             try {
                 Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
                 Log.i(TAG, "Stream received: " + stream.toString());
-                List<StreamImage> myImages = stream.getStreamImageList();
+                myImages = stream.getStreamImageList();
                 List<StreamImage> shortMyImages = new ArrayList<StreamImage>();
                 if (myImages.size() > 0) {
                     int counter = 0;
                     for (StreamImage streamImageItem : myImages) {
-                        if (counter < 16) {
+                        if (counter >= displayPicStart && counter < displayPicEnd) {
                             Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
                             shortMyImages.add(streamImageItem);
                         }
