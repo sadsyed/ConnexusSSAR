@@ -59,9 +59,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton2"
-        android:layout_alignTop="@+id/subscribedStreamsButton"
-        android:layout_alignParentRight="true"
-        android:layout_toEndOf="@+id/searchStreamButton"
-        android:src="@drawable/earth.jpg" />/>
+        android:padding="0dip"
+        android:src="@drawable/earth"
+        android:layout_toRightOf="@id/searchStreamButton"
+
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
