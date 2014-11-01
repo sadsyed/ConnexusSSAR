@@ -6,6 +6,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+
+import java.util.List;
+
+import ssar.apt.connexusssar.util.ConnexusFileService;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 /**
@@ -17,6 +21,7 @@ public class ConnexusLocationService {
     LocationListener locationListener;
     public static double[] lastLocation = new double[2];
     Context mContext;
+    private static final String TAG = ConnexusLocationService.class.getSimpleName();
 
     public ConnexusLocationService(Context mContext) {
         this.mContext = mContext;
@@ -35,12 +40,36 @@ public class ConnexusLocationService {
 
             public void onProviderDisabled(String provider) {}
         };
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG,"Created location listener.");
+        Log.i(TAG,"Created location listener.");
 
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100000, 100, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100000, 100, locationListener);
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG,"Registered listeners for location.");
+        Log.i(TAG,"Registered listeners for location.");
+    }
+
+    public static double[] getGPS(Context mContext) {
+        LocationManager lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = lm.getProviders(true);
+
+        /* Loop over the array backwards, and if you get an accurate location, then break out the loop*/
+        Location l = null;
+
+        for (int i=providers.size()-1; i>=0; i--) {
+            Log.i(TAG, "Looping over providers.");
+            l = lm.getLastKnownLocation(providers.get(i));
+            if (l != null) break;
+        }
+
+        double[] gps = new double[2];
+        if (l != null) {
+            Log.i(TAG, "l is not equal null.");
+            gps[0] = l.getLatitude();
+            gps[1] = l.getLongitude();
+        } else {
+            Log.i(TAG, "l is equal to null.");
+        }
+        return gps;
     }
 
     public void saveAppLocation(Location location) {
@@ -48,6 +77,6 @@ public class ConnexusLocationService {
         double longitude = 0.0;
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG,"Saving location: " + Double.toString(latitude) + ", " + Double.toString(longitude));
+        Log.i(TAG,"Saving location: " + Double.toString(latitude) + ", " + Double.toString(longitude));
     }
 }

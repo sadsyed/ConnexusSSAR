@@ -5,15 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
-import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
+import android.view.View;
 import android.widget.GridView;
-import android.widget.TextView;
 
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -21,19 +22,17 @@ import java.util.List;
 
 import ssar.apt.connexusssar.types.StreamImage;
 import ssar.apt.connexusssar.types.StreamImageAdapter;
+import ssar.apt.connexusssar.util.ConnexusFileService;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
-import ssar.apt.connexusssar.types.StreamAdapater;
 import ssar.apt.connexusssar.types.Stream;
 
-
-
-
 public class ViewAStreamActivity extends Activity {
-    private static final String TAG = ConnexusIntentService.class.getSimpleName();
+    private static final String TAG = ViewAStreamActivity.class.getSimpleName();
     private StreamParser streamParser = new StreamParser();
     private ConnexusViewAStreamRequestReceiver requestReceiver;
-    private ConnexusViewAStreamRequestReceiver subscribeRequestReceiver;
+    private ConnexusViewAStreamRequestReceiver uploadRequestReceiver;
+    private String streamname = "";
     IntentFilter filter;
 
     GridView gridView;
@@ -43,24 +42,22 @@ public class ViewAStreamActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_astream);
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting View a stream");
+        Log.i(TAG, "Starting View a stream");
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Stream is: " + message);
+        streamname = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        Log.i(TAG, "Stream is: " + streamname);
         //set the JSON request object
         JSONObject requestJSON = new JSONObject();
         try {
-            //TODO: Remove the hardcoded userid
-            requestJSON.put("streamname", message);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Created json");
+            requestJSON.put("streamname", streamname);
         } catch (Exception e) {
-            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Exception while creating an request JSON.");
+            Log.e(TAG, "Exception while creating an request JSON.");
         }
 
         setContentView(R.layout.activity_view_astream);
-        double[] myLocation = getGPS();
+        double[] myLocation = ConnexusLocationService.getGPS(this);
         for(double val : myLocation) {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Location is: " + Double.toString(val));
+            Log.i(TAG, "Location is: " + Double.toString(val));
         }
 
         filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
@@ -68,39 +65,13 @@ public class ViewAStreamActivity extends Activity {
         requestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.VIEW_ASTREAM);
         registerReceiver(requestReceiver, filter);
 
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting ViewAStreams request");
         Intent msgIntent = new Intent(ViewAStreamActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.VIEW_ASTREAM);
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "JSON sent is: " + requestJSON.toString());
+        Log.i(TAG, "JSON sent is: " + requestJSON.toString());
         msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
         startService(msgIntent);
 
     }
-
-    private double[] getGPS() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = lm.getProviders(true);
-
-        /* Loop over the array backwards, and if you get an accurate location, then break out the loop*/
-        Location l = null;
-
-        for (int i=providers.size()-1; i>=0; i--) {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Looping over providers.");
-            l = lm.getLastKnownLocation(providers.get(i));
-            if (l != null) break;
-        }
-
-        double[] gps = new double[2];
-        if (l != null) {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "l is not equal null.");
-            gps[0] = l.getLatitude();
-            gps[1] = l.getLongitude();
-        } else {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "l is equal to null.");
-        }
-        return gps;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,21 +94,86 @@ public class ViewAStreamActivity extends Activity {
 
     @Override
     public void onDestroy() {
-        //this.unregisterReceiver(requestReceiver);
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
         this.unregisterReceiver(requestReceiver);
+        if(uploadRequestReceiver != null) {
+            this.unregisterReceiver(uploadRequestReceiver);
+        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
         this.registerReceiver(requestReceiver, filter);
+        if(uploadRequestReceiver != null) {
+            this.registerReceiver(uploadRequestReceiver, filter);
+        }
         super.onResume();
     }
+
+    /** Called when the user clicks the View Streams button */
+    public void UploadImageFile(View view) {
+        //Select file
+        Intent intentChooser = new Intent();
+        intentChooser.setType("image/*");
+        intentChooser.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intentChooser, "Choose Picture"), 1);
+    }
+
+    protected void redrawStreams() {
+        Intent intent = getIntent();
+        Log.i(TAG, "Redrawing streams for stream: " + streamname);
+        //set the JSON request object
+        JSONObject requestJSON = new JSONObject();
+        try {
+            requestJSON.put("streamname", streamname);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception while creating an request JSON.");
+        }
+
+        filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        requestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.VIEW_ASTREAM);
+        registerReceiver(requestReceiver, filter);
+
+        Intent msgIntent = new Intent(ViewAStreamActivity.this, ConnexusIntentService.class);
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.VIEW_ASTREAM);
+        Log.i(TAG, "JSON sent is: " + requestJSON.toString());
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
+        startService(msgIntent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(resultCode==RESULT_CANCELED)
+        {
+            // action cancelled
+        }
+        if(resultCode==RESULT_OK)
+        {
+            Uri selectedimg = data.getData();
+            String imagePath = ConnexusFileService.getRealPathFromURI(selectedimg, this);
+            Log.i(TAG, "Selected img path is: " + imagePath);
+
+            Intent intent = new Intent(this, ViewAStreamActivity.class);
+            filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
+            filter.addCategory(Intent.CATEGORY_DEFAULT);
+            uploadRequestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.UPLOAD_FILE);
+            registerReceiver(uploadRequestReceiver, filter);
+
+            Intent msgIntent = new Intent(ViewAStreamActivity.this, ConnexusIntentService.class);
+            msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.UPLOAD_FILE);
+            msgIntent.putExtra("Streamname", streamname);
+            msgIntent.putExtra("ImagePath", imagePath);
+            startService(msgIntent);
+        }
+    }
+
     public class ConnexusViewAStreamRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;
@@ -149,32 +185,44 @@ public class ViewAStreamActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service response JSON: " + responseJSON);
-
-            //TextView jsonObjectTextView = (TextView) findViewById(R.id.viewStreamTitle);
-            //jsonObjectTextView.setText(responseJSON);
-
-            //List<Stream> allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
-            Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Stream received: " + stream.toString());
-            List<StreamImage> myImages = stream.getStreamImageList();
-            List<StreamImage> shortMyImages = new ArrayList<StreamImage>();
-            if (myImages.size() > 0) {
-                int counter = 0;
-                for(StreamImage streamImageItem : myImages) {
-                    if (counter < 16) {
-                        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
-                        shortMyImages.add(streamImageItem);
+            JSONObject json = new JSONObject();
+            try {
+                json = new JSONObject(responseJSON);
+            } catch (JSONException e)
+            {
+                Log.i(TAG, "Exception creating json object: " + e.getMessage());
+            }
+            Log.i(TAG, "Service response JSON: " + responseJSON);
+            try {
+                Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
+                Log.i(TAG, "Stream received: " + stream.toString());
+                List<StreamImage> myImages = stream.getStreamImageList();
+                List<StreamImage> shortMyImages = new ArrayList<StreamImage>();
+                if (myImages.size() > 0) {
+                    int counter = 0;
+                    for (StreamImage streamImageItem : myImages) {
+                        if (counter < 16) {
+                            Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
+                            shortMyImages.add(streamImageItem);
+                        }
+                        counter++;
                     }
-                    counter ++;
+                }
+                setContentView(R.layout.activity_view_astream);
+                gridView = (GridView) findViewById(R.id.viewAStreamGridView);
+                gridView.setAdapter(new StreamImageAdapter(context, shortMyImages));
+            } catch (Exception e) {
+                Log.i(TAG,"This was a upload image request. Trying to redraw streams.");
+                try {
+                    String imageFileUrl = (String)json.get("file");
+                    Log.i(TAG,"Files list was greater than 0, redrawing streams.");
+                    if (imageFileUrl != null) {
+                        redrawStreams();
+                    }
+                } catch (JSONException exception) {
+                    Log.i(TAG,"Could not get any files from response.");
                 }
             }
-
-
-            setContentView(R.layout.activity_view_astream);
-            gridView = (GridView) findViewById(R.id.viewAStreamGridView);
-            //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
-            gridView.setAdapter(new StreamImageAdapter(context, shortMyImages));
         }
     }
 }

@@ -10,5 +10,5 @@ public class ConnexusSSARConstants {
     public static final String VIEW_ALL_STREAMS = APP_SPOT + "/ViewAllStreamsService";
     public static final String VIEW_ASTREAM = APP_SPOT + "/ViewStreamService";
     public static final String MANAGE_STREAM = APP_SPOT + "/ManageStreamService";
-    public static final String UPLOAD_FILE = APP_SPOT + "/handle_upload";
+    public static final String UPLOAD_FILE = APP_SPOT + "/AndroidUploadHandler";
 }
