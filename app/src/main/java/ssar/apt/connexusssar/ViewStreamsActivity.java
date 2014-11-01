@@ -138,6 +138,11 @@ public class ViewStreamsActivity extends Activity {
         this.startActivity(searchResultActivityIntent);
     }
 
+    public void nearbyStreams(View view) {
+        Intent intent = new Intent(this, NearbyStreamsActivity.class);
+        startActivity(intent);
+    }
+
     public class ConnexusRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;

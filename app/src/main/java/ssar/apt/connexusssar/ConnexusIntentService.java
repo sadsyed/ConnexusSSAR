@@ -81,6 +81,10 @@ public class ConnexusIntentService extends IntentService {
                 StringEntity stringEntity = new StringEntity(requestJSON);
                 stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 post.setEntity(stringEntity);
+            } else if (requestJSON != null && ConnexusSSARConstants.NEARBY_STREAMS.equals(requestURL)) {
+                StringEntity stringEntity = new StringEntity(requestJSON);
+                stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                post.setEntity(stringEntity);
             } else if(ConnexusSSARConstants.UPLOAD_FILE.equals(requestURL)) {
                 post.addHeader("Accept", "application/json");
                 post.addHeader("Content-type", "multipart/form-data");
