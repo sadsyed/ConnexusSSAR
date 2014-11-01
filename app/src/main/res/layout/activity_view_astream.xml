@@ -63,6 +63,7 @@
         android:layout_height="wrap_content"
         android:text="Streams"
         android:id="@+id/streamsButton"
+        android:onClick="loadAllStreams"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>

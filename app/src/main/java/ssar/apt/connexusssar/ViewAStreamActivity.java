@@ -29,6 +29,7 @@ import ssar.apt.connexusssar.types.Stream;
 
 public class ViewAStreamActivity extends Activity {
     private static final String TAG = ViewAStreamActivity.class.getSimpleName();
+    public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
     private StreamParser streamParser = new StreamParser();
     private ConnexusViewAStreamRequestReceiver requestReceiver;
     private ConnexusViewAStreamRequestReceiver redrawRequestReceiver;
@@ -181,6 +182,13 @@ public class ViewAStreamActivity extends Activity {
             displayPicEnd = 16;
         }
         redrawStreams();
+    }
+
+    public void loadAllStreams(View view) {
+        Intent intent = new Intent(this, ViewStreamsActivity.class);
+        //EditText editText = (EditText) findViewById(R.id.viewStreamsButton);
+        intent.putExtra(EXTRA_MESSAGE, "View Streams Activity Test");
+        startActivity(intent);
     }
 
     protected void redrawStreams() {
