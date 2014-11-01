@@ -31,6 +31,7 @@ public class ViewAStreamActivity extends Activity {
     private static final String TAG = ViewAStreamActivity.class.getSimpleName();
     private StreamParser streamParser = new StreamParser();
     private ConnexusViewAStreamRequestReceiver requestReceiver;
+    private ConnexusViewAStreamRequestReceiver redrawRequestReceiver;
     private ConnexusViewAStreamRequestReceiver uploadRequestReceiver;
     private String streamname = "";
     IntentFilter filter;
@@ -94,23 +95,66 @@ public class ViewAStreamActivity extends Activity {
 
     @Override
     public void onDestroy() {
+        if(requestReceiver != null) {
+            try {
+                this.unregisterReceiver(requestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(uploadRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(uploadRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(redrawRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(redrawRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        this.unregisterReceiver(requestReceiver);
+        if(requestReceiver != null) {
+            try {
+                this.unregisterReceiver(requestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
         if(uploadRequestReceiver != null) {
-            this.unregisterReceiver(uploadRequestReceiver);
+            try {
+                this.unregisterReceiver(uploadRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(redrawRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(redrawRequestReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.i(TAG, "Exception unregistering receiver: " + e.getMessage());
+            }
         }
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        this.registerReceiver(requestReceiver, filter);
+        if(requestReceiver != null) {
+            this.registerReceiver(requestReceiver, filter);
+        }
         if(uploadRequestReceiver != null) {
             this.registerReceiver(uploadRequestReceiver, filter);
+        }
+        if(redrawRequestReceiver != null) {
+            this.registerReceiver(redrawRequestReceiver, filter);
         }
         super.onResume();
     }
@@ -137,8 +181,15 @@ public class ViewAStreamActivity extends Activity {
 
         filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        requestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.VIEW_ASTREAM);
-        registerReceiver(requestReceiver, filter);
+        if (redrawRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(redrawRequestReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.i(TAG, "Exception unregistering receiver: " + e.getMessage());
+            }
+        }
+        redrawRequestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.VIEW_ASTREAM);
+        registerReceiver(redrawRequestReceiver, filter);
 
         Intent msgIntent = new Intent(ViewAStreamActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.VIEW_ASTREAM);

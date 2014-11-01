@@ -3,11 +3,12 @@
 
     <string name="app_name">ConnexusSSAR</string>
     <string name="connexus_title">Connexus!</string>
-
     <string name="action_settings">Settings</string>
     <string name="title_activity_view_streams">ViewStreamsActivity</string>
     <string name="title_activity_view_astream">ViewAStream</string>
     <string name="view_streams_button_label">View Streams</string>
     <string name="subscribed_streams_button_label">My Subscribed Streams</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="hello_world">Search Results Activity</string>
 
 </resources>
