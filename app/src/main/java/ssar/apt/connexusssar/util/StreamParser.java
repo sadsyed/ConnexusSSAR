@@ -72,6 +72,10 @@ public class StreamParser {
                 case ConnexusSSARConstants.VIEW_ALL_STREAMS:
                     jsonArray = json.getJSONArray("streamlist");
                     break;
+                case ConnexusSSARConstants.SEARCH_STREAM:
+                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": responseJSON: " + jsonArray);
+                    jsonArray = json.getJSONArray("streamlist");
+                    break;
                 case ConnexusSSARConstants.MANAGE_STREAM:
                     jsonArray = json.getJSONArray("subscribedstreamlist");
                     break;
@@ -88,7 +92,7 @@ public class StreamParser {
             if(jsonArray.length() > 0 ) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + streamObj.toString());
+                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": " + streamObj.toString());
                     streams.add(streamObj);
                 }
             } else {
