@@ -10,5 +10,6 @@
     <string name="subscribed_streams_button_label">My Subscribed Streams</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="hello_world">Search Results Activity</string>
+    <string name="title_activity_nearby_streams">NearbyStreamsActivity</string>
 
 </resources>
