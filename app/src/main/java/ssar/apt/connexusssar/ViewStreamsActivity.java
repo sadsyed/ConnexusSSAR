@@ -58,7 +58,7 @@ public class ViewStreamsActivity extends Activity {
         requestReceiver = new ConnexusRequestReceiver(ConnexusSSARConstants.VIEW_ALL_STREAMS);
         registerReceiver(requestReceiver, filter);
 
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting ViewAllStreams request");
+        Log.i(TAG, "Starting ViewAllStreams request");
         Intent msgIntent = new Intent(ViewStreamsActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.VIEW_ALL_STREAMS);
         startService(msgIntent);
@@ -86,19 +86,51 @@ public class ViewStreamsActivity extends Activity {
 
     @Override
     public void onDestroy() {
-        //this.unregisterReceiver(requestReceiver);
+        if(requestReceiver != null) {
+            try {
+                this.unregisterReceiver(requestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(subscribeRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(subscribeRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        this.unregisterReceiver(requestReceiver);
+        if(requestReceiver != null) {
+            try {
+                this.unregisterReceiver(requestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(subscribeRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(subscribeRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
         this.registerReceiver(requestReceiver, filter);
+        if(requestReceiver != null) {
+            this.registerReceiver(requestReceiver, filter);
+        }
+        if(subscribeRequestReceiver != null) {
+            this.registerReceiver(subscribeRequestReceiver, filter);
+        }
         super.onResume();
     }
 
@@ -116,10 +148,10 @@ public class ViewStreamsActivity extends Activity {
             //TODO: Remove the hardcoded userid
             requestJSON.put("userid", "sh.sadaf@gmail.com");
         } catch (Exception e) {
-            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Exception while creating an request JSON.");
+            Log.e(TAG, "Exception while creating an request JSON.");
         }
 
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting ManageStreams request");
+        Log.i(TAG, "Starting ManageStreams request");
         Intent msgIntent = new Intent(ViewStreamsActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.MANAGE_STREAM);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
@@ -132,7 +164,7 @@ public class ViewStreamsActivity extends Activity {
         String streamQuery = findStreamsEditText.getText().toString();
 
         //launch searchResultsActivity
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Launching SearchResults Activity");
+        Log.i(TAG, "Launching SearchResults Activity");
         Intent searchResultActivityIntent = new Intent(this, SearchResultsActivity.class);
         searchResultActivityIntent.putExtra("streamQuery", streamQuery);
         this.startActivity(searchResultActivityIntent);
@@ -154,7 +186,7 @@ public class ViewStreamsActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
-            //Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service response JSON: " + responseJSON);
+            //Log.i(TAG, "Service response JSON: " + responseJSON);
 
             TextView jsonObjectTextView = (TextView) findViewById(R.id.viewStreamTitle);
             jsonObjectTextView.setText(responseJSON);
@@ -166,7 +198,7 @@ public class ViewStreamsActivity extends Activity {
             int streamCounter = 0;
             for (Stream streamItem : allStreams) {
                 if(streamCounter < 16) {
-                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, String.valueOf(streamCounter) + ": " + streamItem.toString());
+                    Log.i(TAG, String.valueOf(streamCounter) + ": " + streamItem.toString());
                     streams.add(streamItem);
                 }
                 streamCounter++;

@@ -42,7 +42,6 @@ public class ViewAStreamActivity extends Activity {
     IntentFilter filter;
 
     GridView gridView;
-    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,6 +260,7 @@ public class ViewAStreamActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
             JSONObject json = new JSONObject();
+
             try {
                 json = new JSONObject(responseJSON);
             } catch (JSONException e)

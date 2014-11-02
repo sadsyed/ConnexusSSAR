@@ -1,6 +1,5 @@
 package ssar.apt.connexusssar.types;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -22,24 +20,24 @@ import java.util.List;
 
 import ssar.apt.connexusssar.R;
 import ssar.apt.connexusssar.ViewAStreamActivity;
-import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 /**
- * Created by Amy on 10/26/2014.
+ * Created by Amy on 11/2/2014.
  */
-public class StreamImageAdapter extends BaseAdapter {
+public class StreamImageAdapterClickable extends BaseAdapter {
 
     Context context;
     List<StreamImage> streamImages = new ArrayList<StreamImage>();
     private static String TAG = new String();
+    public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
 
     private static LayoutInflater layoutInflater = null;
 
-    public StreamImageAdapter(Context context, List<StreamImage> streamImages) {
-        TAG = StreamImageAdapter.class.getSimpleName();
+    public StreamImageAdapterClickable(Context context, List<StreamImage> streamImages) {
+        TAG = StreamImageAdapterClickable.class.getSimpleName();
         this.context = context;
         this.streamImages = streamImages;
-        Log.i(TAG,"Stream image adapter context is: " + context.toString());
+        Log.i(TAG, "Stream image adapter context is: " + context.toString());
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if(layoutInflater != null) {
             Log.i(TAG, "layout inflater not null");
@@ -82,22 +80,14 @@ public class StreamImageAdapter extends BaseAdapter {
         } else {
             Log.i(TAG, "load image equal null");
         }
-        /*rowView.setOnClickListener(new View.OnClickListener() {
+        rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
-                //Need to launch the stream activity here.
                 Intent intent = new Intent(context, ViewAStreamActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, streams.get(position).getStreamname());
+                intent.putExtra(EXTRA_MESSAGE, streamImages.get(position).getImageStreamName());
                 context.startActivity(intent);
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
             }
-        });*/
-        if (rowView == null) {
-            Log.i(TAG, "row view equals null");
-        } else {
-            Log.i(TAG, "row view not equal to null");
-        }
+        });
         return rowView;
     }
 

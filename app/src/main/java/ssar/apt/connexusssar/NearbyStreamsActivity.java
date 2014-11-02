@@ -20,14 +20,20 @@ import java.util.List;
 
 import ssar.apt.connexusssar.types.Stream;
 import ssar.apt.connexusssar.types.StreamAdapater;
+import ssar.apt.connexusssar.types.StreamImage;
+import ssar.apt.connexusssar.types.StreamImageAdapter;
+import ssar.apt.connexusssar.types.StreamImageAdapterClickable;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
 
 
 public class NearbyStreamsActivity extends Activity {
-    private static final String TAG = ConnexusIntentService.class.getSimpleName();
+    private static final String TAG = NearbyStreamsActivity.class.getSimpleName();
     private StreamParser streamParser = new StreamParser();
     private NearbyStreamsRequestReceiver nbsRequestReceiver;
+    List<StreamImage> myImages = null;
+    private int displayPicStart = 0;
+    private int displayPicEnd = 16;
     private IntentFilter filter;
 
     GridView gridView;
@@ -57,13 +63,46 @@ public class NearbyStreamsActivity extends Activity {
         nbsRequestReceiver = new NearbyStreamsRequestReceiver(ConnexusSSARConstants.NEARBY_STREAMS);
         registerReceiver(nbsRequestReceiver, filter);
 
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting Nearby Streams request");
+        Log.i(TAG, "Starting Nearby Streams request");
         Intent msgIntent = new Intent(NearbyStreamsActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.NEARBY_STREAMS);
         Log.i(TAG, "JSON sent is: " + requestJSON.toString());
         msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
         startService(msgIntent);
     }
+
+    @Override
+    public void onDestroy() {
+        if(nbsRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(nbsRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        if(nbsRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(nbsRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if(nbsRequestReceiver != null) {
+            this.registerReceiver(nbsRequestReceiver, filter);
+        }
+        super.onResume();
+    }
+
 
 
     @Override
@@ -101,25 +140,22 @@ public class NearbyStreamsActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service response JSON: " + responseJSON);
-
-            List<Stream> allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
-
-            //truncate streams to 16 streams
-            List<Stream> streams = new ArrayList<Stream>();
-            int streamCounter = 0;
-            for (Stream streamItem : allStreams) {
-                if(streamCounter < 16) {
-                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, String.valueOf(streamCounter) + ": " + streamItem.toString());
-                    streams.add(streamItem);
+            Log.i(TAG, "Service response JSON: " + responseJSON);
+            myImages = streamParser.jsonToStreamImages(serviceUrl, responseJSON);
+            List<StreamImage> shortMyImages = new ArrayList<StreamImage>();
+            if (myImages.size() > 0) {
+                int counter = 0;
+                for (StreamImage streamImageItem : myImages) {
+                    if (counter >= displayPicStart && counter < displayPicEnd) {
+                        Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
+                        shortMyImages.add(streamImageItem);
+                    }
+                    counter++;
                 }
-                streamCounter++;
             }
-
             setContentView(R.layout.activity_nearby_streams);
             gridView = (GridView) findViewById(R.id.nearbyStreamsGridView);
-            //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
-            gridView.setAdapter(new StreamAdapater(context, streams));
+            gridView.setAdapter(new StreamImageAdapterClickable(context, shortMyImages));
         }
     }
 }
