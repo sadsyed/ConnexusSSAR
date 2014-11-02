@@ -31,6 +31,7 @@ public class NearbyStreamsActivity extends Activity {
     private static final String TAG = NearbyStreamsActivity.class.getSimpleName();
     private StreamParser streamParser = new StreamParser();
     private NearbyStreamsRequestReceiver nbsRequestReceiver;
+    private NearbyStreamsRequestReceiver redrawRequestReceiver;
     List<StreamImage> myImages = null;
     private int displayPicStart = 0;
     private int displayPicEnd = 16;
@@ -80,6 +81,13 @@ public class NearbyStreamsActivity extends Activity {
                 Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
             }
         }
+        if(redrawRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(redrawRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
         super.onDestroy();
     }
 
@@ -92,6 +100,13 @@ public class NearbyStreamsActivity extends Activity {
                 Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
             }
         }
+        if(redrawRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(redrawRequestReceiver);
+            } catch (IllegalArgumentException e){
+                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
         super.onPause();
     }
 
@@ -99,6 +114,9 @@ public class NearbyStreamsActivity extends Activity {
     public void onResume() {
         if(nbsRequestReceiver != null) {
             this.registerReceiver(nbsRequestReceiver, filter);
+        }
+        if(redrawRequestReceiver != null) {
+            this.registerReceiver(redrawRequestReceiver, filter);
         }
         super.onResume();
     }
@@ -129,6 +147,40 @@ public class NearbyStreamsActivity extends Activity {
         startActivity(intent);
     }
 
+
+    public void loadMorePictures(View view) {
+        Log.i(TAG, "Load more pictures clicked");
+        if(displayPicEnd < myImages.size()) {
+            displayPicStart = displayPicEnd;
+            displayPicEnd = displayPicStart + 16;
+        } else {
+            displayPicStart = 0;
+            displayPicEnd = 16;
+        }
+        redrawStreams();
+    }
+
+    public void redrawStreams() {
+        JSONObject requestJSON = new JSONObject();
+        try {
+            requestJSON.put("latitude", latitude);
+            requestJSON.put("longitude", longitude);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception while creating an request JSON.");
+        }
+        filter = new IntentFilter(NearbyStreamsRequestReceiver.PROCESS_RESPONSE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        redrawRequestReceiver = new NearbyStreamsRequestReceiver(ConnexusSSARConstants.NEARBY_STREAMS);
+        registerReceiver(redrawRequestReceiver, filter);
+
+        Log.i(TAG, "Starting Nearby Streams redraw request");
+        Intent msgIntent = new Intent(NearbyStreamsActivity.this, ConnexusIntentService.class);
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.NEARBY_STREAMS);
+        Log.i(TAG, "JSON sent is: " + requestJSON.toString());
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
+        startService(msgIntent);
+    }
+
     public class NearbyStreamsRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;
@@ -155,7 +207,7 @@ public class NearbyStreamsActivity extends Activity {
             }
             setContentView(R.layout.activity_nearby_streams);
             gridView = (GridView) findViewById(R.id.nearbyStreamsGridView);
-            gridView.setAdapter(new StreamImageAdapterClickable(context, shortMyImages));
+            gridView.setAdapter(new StreamImageAdapter(context, shortMyImages));
         }
     }
 }

@@ -172,7 +172,7 @@ public class ViewStreamsActivity extends Activity {
 
     public void nearbyStreams(View view) {
         Intent intent = new Intent(this, NearbyStreamsActivity.class);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     public class ConnexusRequestReceiver extends BroadcastReceiver {
