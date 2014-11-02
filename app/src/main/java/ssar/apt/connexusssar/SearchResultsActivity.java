@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ssar.apt.connexusssar.types.Stream;
+import ssar.apt.connexusssar.types.StreamAdapater;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
 
@@ -120,12 +121,10 @@ public class SearchResultsActivity extends Activity {
                 streamCounter++;
             }
 
-            /*setContentView(R.layout.activity_view_streams);
-            gridView = (GridView) findViewById(R.id.viewStreamGridView);
+            setContentView(R.layout.activity_search_results);
+            gridView = (GridView) findViewById(R.id.searchStreamsGridView);
             //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
             gridView.setAdapter(new StreamAdapater(context, streams));
-            */
         }
     }
-
 }
