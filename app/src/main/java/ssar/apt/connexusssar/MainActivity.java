@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 public class MainActivity extends Activity {
     public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
+    private static String TAG = MainActivity.class.getSimpleName();
     ConnexusLocationService locationservice;
 
 
@@ -41,6 +43,10 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void login(View view) {
+        Log.i(TAG, "Login clicked");
     }
 
     /** Called when the user clicks the View Streams button */
