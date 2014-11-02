@@ -47,10 +47,9 @@ public class ViewAStreamActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_astream);
-        Log.i(TAG, "Starting View a stream");
         Intent intent = getIntent();
         streamname = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        Log.i(TAG, "Stream is: " + streamname);
+        Log.i(TAG, "Starting view a stream for stream: " + streamname);
         //set the JSON request object
         JSONObject requestJSON = new JSONObject();
         try {
@@ -60,10 +59,10 @@ public class ViewAStreamActivity extends Activity {
         }
 
         setContentView(R.layout.activity_view_astream);
-        double[] myLocation = ConnexusLocationService.getGPS(this);
-        for(double val : myLocation) {
-            Log.i(TAG, "Location is: " + Double.toString(val));
-        }
+ //       double[] myLocation = ConnexusLocationService.getGPS(this);
+ //       for(double val : myLocation) {
+ //           Log.i(TAG, "Location is: " + Double.toString(val));
+ //       }
 
         filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -173,7 +172,6 @@ public class ViewAStreamActivity extends Activity {
     }
 
     public void loadMorePictures(View view) {
-        Log.i(TAG, "Load more pictures clicked");
         if(displayPicEnd < myImages.size()) {
             displayPicStart = displayPicEnd;
             displayPicEnd = displayPicStart + 16;
@@ -186,8 +184,6 @@ public class ViewAStreamActivity extends Activity {
 
     public void loadAllStreams(View view) {
         Intent intent = new Intent(this, ViewStreamsActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.viewStreamsButton);
-        intent.putExtra(EXTRA_MESSAGE, "View Streams Activity Test");
         startActivity(intent);
     }
 
@@ -267,7 +263,7 @@ public class ViewAStreamActivity extends Activity {
             {
                 Log.i(TAG, "Exception creating json object: " + e.getMessage());
             }
-            Log.i(TAG, "Service response JSON: " + responseJSON);
+            //Log.i(TAG, "Service response JSON: " + responseJSON);
             try {
                 Stream stream = streamParser.jsonToSingleStream(serviceUrl, responseJSON);
                 Log.i(TAG, "Stream received: " + stream.toString());
@@ -277,7 +273,7 @@ public class ViewAStreamActivity extends Activity {
                     int counter = 0;
                     for (StreamImage streamImageItem : myImages) {
                         if (counter >= displayPicStart && counter < displayPicEnd) {
-                            Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
+                            //Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
                             shortMyImages.add(streamImageItem);
                         }
                         counter++;

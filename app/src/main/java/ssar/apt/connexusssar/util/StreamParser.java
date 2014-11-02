@@ -88,7 +88,7 @@ public class StreamParser {
             if(jsonArray.length() > 0 ) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                    Log.i(CLASSNAME, CLASSNAME + streamObj.toString());
+                    //Log.i(CLASSNAME, CLASSNAME + streamObj.toString());
                     streams.add(streamObj);
                 }
             } else {
@@ -117,7 +117,6 @@ public class StreamParser {
             switch(serviceURL) {
                 case ConnexusSSARConstants.NEARBY_STREAMS:
                     jsonArray = json.getJSONArray("imageList");
-                    Log.i(CLASSNAME, "Got image list from json.");
                     break;
                 default:
                     break;
@@ -125,7 +124,7 @@ public class StreamParser {
             if(jsonArray.length() > 0 ) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     StreamImage streamImageObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), StreamImage.class);
-                    Log.i(CLASSNAME, CLASSNAME + streamImageObj.toString());
+                    //Log.i(CLASSNAME, CLASSNAME + streamImageObj.toString());
                     streamImages.add(streamImageObj);
                 }
             } else {

@@ -64,10 +64,9 @@ public class NearbyStreamsActivity extends Activity {
         nbsRequestReceiver = new NearbyStreamsRequestReceiver(ConnexusSSARConstants.NEARBY_STREAMS);
         registerReceiver(nbsRequestReceiver, filter);
 
-        Log.i(TAG, "Starting Nearby Streams request");
         Intent msgIntent = new Intent(NearbyStreamsActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.NEARBY_STREAMS);
-        Log.i(TAG, "JSON sent is: " + requestJSON.toString());
+        Log.i(TAG, "JSON sent for nearby streams request is: " + requestJSON.toString());
         msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
         startService(msgIntent);
     }
@@ -149,7 +148,6 @@ public class NearbyStreamsActivity extends Activity {
 
 
     public void loadMorePictures(View view) {
-        Log.i(TAG, "Load more pictures clicked");
         if(displayPicEnd < myImages.size()) {
             displayPicStart = displayPicEnd;
             displayPicEnd = displayPicStart + 16;
@@ -173,10 +171,9 @@ public class NearbyStreamsActivity extends Activity {
         redrawRequestReceiver = new NearbyStreamsRequestReceiver(ConnexusSSARConstants.NEARBY_STREAMS);
         registerReceiver(redrawRequestReceiver, filter);
 
-        Log.i(TAG, "Starting Nearby Streams redraw request");
         Intent msgIntent = new Intent(NearbyStreamsActivity.this, ConnexusIntentService.class);
         msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.NEARBY_STREAMS);
-        Log.i(TAG, "JSON sent is: " + requestJSON.toString());
+        Log.i(TAG, "JSON sent for nearby streams redraw request is: " + requestJSON.toString());
         msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
         startService(msgIntent);
     }
@@ -199,7 +196,7 @@ public class NearbyStreamsActivity extends Activity {
                 int counter = 0;
                 for (StreamImage streamImageItem : myImages) {
                     if (counter >= displayPicStart && counter < displayPicEnd) {
-                        Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
+                        //Log.i(TAG, String.valueOf(counter) + ": " + streamImageItem.toString());
                         shortMyImages.add(streamImageItem);
                     }
                     counter++;
@@ -207,7 +204,7 @@ public class NearbyStreamsActivity extends Activity {
             }
             setContentView(R.layout.activity_nearby_streams);
             gridView = (GridView) findViewById(R.id.nearbyStreamsGridView);
-            gridView.setAdapter(new StreamImageAdapter(context, shortMyImages));
+            gridView.setAdapter(new StreamImageAdapterClickable(context, shortMyImages));
         }
     }
 }

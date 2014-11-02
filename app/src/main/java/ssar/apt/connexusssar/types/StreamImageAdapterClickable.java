@@ -36,14 +36,9 @@ public class StreamImageAdapterClickable extends BaseAdapter {
     public StreamImageAdapterClickable(Context context, List<StreamImage> streamImages) {
         TAG = StreamImageAdapterClickable.class.getSimpleName();
         this.context = context;
+        Log.i(TAG, "Context is for combine stream image adapter:" + context.toString());
         this.streamImages = streamImages;
-        Log.i(TAG, "Stream image adapter context is: " + context.toString());
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if(layoutInflater != null) {
-            Log.i(TAG, "layout inflater not null");
-        } else {
-            Log.i(TAG, "layout inflater null");
-        }
     }
 
     @Override
@@ -71,7 +66,7 @@ public class StreamImageAdapterClickable extends BaseAdapter {
         holder.imageView = (ImageView) rowView.findViewById(R.id.coverImage);
 
         //load the imagefile name
-        holder.textView.setText(streamImages.get(position).getImageFilename());
+        holder.textView.setText(streamImages.get(position).getImageStreamName());
 
         //load the stream cover image using cover url
         LoadImage loadImage = new LoadImage(holder.imageView);
@@ -95,17 +90,7 @@ public class StreamImageAdapterClickable extends BaseAdapter {
         private final WeakReference<ImageView> weakReference;
 
         public LoadImage(ImageView imageView) {
-            if(imageView != null) {
-                Log.i(TAG, "Imageview is: " + imageView.toString());
-            } else {
-                Log.i(TAG, "Imageview equal to null");
-            }
             weakReference = new WeakReference<ImageView>(imageView);
-            if(weakReference != null) {
-                Log.i(TAG,"Weak reference not equal null");
-            } else {
-                Log.i(TAG, "Weark reference equals null");
-            }
         }
 
         @Override
@@ -119,9 +104,7 @@ public class StreamImageAdapterClickable extends BaseAdapter {
         @Override
         protected Drawable doInBackground(String... args) {
             try {
-                Log.i(TAG, "Processing image: " + new URL(args[0]).getContent().toString());
                 Drawable drawable = Drawable.createFromStream((InputStream)new URL(args[0]).getContent(), "src");
-                Log.i(TAG, "Drawable is: " + drawable.toString());
                 return drawable;
             } catch (Exception e) {
                 Log.i(TAG, "Error creating drawable: " + e.toString());
@@ -131,24 +114,10 @@ public class StreamImageAdapterClickable extends BaseAdapter {
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            if(drawable == null) {
-                Log.i(TAG, "Drawable equals null");
-            } else {
-                Log.i(TAG, "Drawable is : " + drawable.toString());
-            }
-            if(weakReference == null) {
-                Log.i(TAG, "weak reference is equal to null in post execute");
-            } else {
-                Log.i(TAG, "weak reference not equal to null in post execute");
-            }
             ImageView imgView = weakReference.get();
             if (imgView != null) {
-                Log.i(TAG, "imgView not equall null");
                 imgView.setImageDrawable(drawable);
-            } else {
-                Log.i(TAG, "imgView equal null.");
             }
-
         }
     }
 
