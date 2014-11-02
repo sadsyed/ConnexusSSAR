@@ -114,7 +114,7 @@ public class SearchResultsActivity extends Activity {
             List<Stream> streams = new ArrayList<Stream>();
             int streamCounter = 0;
             for (Stream streamItem : allStreams) {
-                if(streamCounter < 16) {
+                if(streamCounter < 8) {
                     Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": " + String.valueOf(streamCounter) + ": " + streamItem.toString());
                     streams.add(streamItem);
                 }
