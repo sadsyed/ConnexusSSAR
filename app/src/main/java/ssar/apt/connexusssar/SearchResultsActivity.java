@@ -76,7 +76,7 @@ public class SearchResultsActivity extends Activity {
 
     public void loadSearchResults(View view) {
         EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
-        String searchQuery = searchQueryEditText.getText().toString();
+        searchQuery = searchQueryEditText.getText().toString();
 
         performSearchRequest();
     }
