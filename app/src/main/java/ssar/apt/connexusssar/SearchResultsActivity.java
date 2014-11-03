@@ -31,6 +31,13 @@ public class SearchResultsActivity extends Activity {
 
     private StreamParser streamParser = new StreamParser();
     private SearchRequestReceiver searchRequestReceiver;
+    private SearchRequestReceiver redrawSearchRequestReceiver;
+
+    private String searchQuery;
+    private List<Stream> allStreams = new ArrayList<Stream>();
+    //private List<Stream> streams = new ArrayList<Stream>();
+    private int displayPicStart = 0;
+    private int displayPicEnd = 8;
 
     GridView gridView;
 
@@ -40,7 +47,7 @@ public class SearchResultsActivity extends Activity {
         setContentView(R.layout.activity_search_results);
 
         Intent intent = getIntent();
-        String searchQuery = intent.getStringExtra(SEARCH_QUERY);
+        searchQuery = intent.getStringExtra(SEARCH_QUERY);
 
         EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
         searchQueryEditText.setText(searchQuery);
@@ -74,6 +81,42 @@ public class SearchResultsActivity extends Activity {
         searchStreams(searchQuery);
     }
 
+    public void moreSearchResults(View view) {
+        if(displayPicEnd < allStreams.size()){
+            displayPicStart = displayPicEnd;
+            displayPicEnd = displayPicStart + 8;
+        } else {
+            displayPicStart = 0;
+            displayPicEnd = 8;
+        }
+
+        redrawStreams();
+    }
+
+    protected void redrawStreams() {
+        Intent intent = getIntent();
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Redrawing streams for stream: " + searchQuery);
+
+        IntentFilter filter = new IntentFilter(SearchRequestReceiver.PROCESS_RESPONSE);
+        filter.addCategory((Intent.CATEGORY_DEFAULT));
+        redrawSearchRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
+        registerReceiver(redrawSearchRequestReceiver, filter);
+
+        //set the JSON request object
+        JSONObject requestJSON = new JSONObject();
+        try {
+            requestJSON.put("streamname", searchQuery);
+        } catch (Exception e) {
+            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Exception while creating a search request JSON object.");
+        }
+
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting SearchStreams request");
+        Intent msgIntent = new Intent(SearchResultsActivity.this, ConnexusIntentService.class);
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.SEARCH_STREAM);
+        msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
+        startService(msgIntent);
+    }
+
     private void searchStreams(String searchQuery) {
         IntentFilter filter = new IntentFilter(SearchRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory((Intent.CATEGORY_DEFAULT));
@@ -95,6 +138,8 @@ public class SearchResultsActivity extends Activity {
         startService(msgIntent);
     }
 
+    private void
+
     public class SearchRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
         private String serviceUrl;
@@ -107,21 +152,34 @@ public class SearchResultsActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             String responseJSON = intent.getStringExtra(ConnexusIntentService.RESPONSE_JSON);
             Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service response JSON: " + responseJSON);
-
-            List<Stream> allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
-
-            //truncate streams to 16 streams
             List<Stream> streams = new ArrayList<Stream>();
-            int streamCounter = 0;
-            for (Stream streamItem : allStreams) {
-                if(streamCounter < 8) {
-                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": " + String.valueOf(streamCounter) + ": " + streamItem.toString());
-                    streams.add(streamItem);
+
+            allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
+
+            //truncate streams to 8 streams
+            streams = new ArrayList<Stream>();
+
+            if(allStreams.size() > 0) {
+                int streamCounter = 0;
+                //streamsLeftToView = allStreams.size();
+                for (Stream streamItem : allStreams) {
+                    if (streamCounter >= displayPicStart && streamCounter < displayPicEnd) {
+                        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": " + String.valueOf(streamCounter) + ": " + streamItem.toString());
+                        streams.add(streamItem);
+                        // allStreams.remove(streamItem);
+                    }
+                    streamCounter++;
                 }
-                streamCounter++;
             }
 
             setContentView(R.layout.activity_search_results);
+
+            EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
+            searchQueryEditText.setText(searchQuery);
+
+            EditText resultsInfoEditText = (EditText) findViewById(R.id.resultsInfoEditText);
+            resultsInfoEditText.setText(allStreams.size() + " results for " + searchQuery +". Click on an image to view stream");
+
             gridView = (GridView) findViewById(R.id.searchStreamsGridView);
             //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
             gridView.setAdapter(new StreamAdapater(context, streams));

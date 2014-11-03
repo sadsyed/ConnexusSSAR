@@ -25,15 +25,37 @@
         android:textSize="12dp"
         android:onClick="loadSearchResults"/>
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/resultsInfoEditText"
+        android:layout_below="@id/loadSearchResults"
+        android:layout_alignRight="@+id/searchStreamsGridView"
+        android:layout_alignEnd="@+id/searchStreamsGridView"
+        android:layout_toEndOf="@+id/loadSearchResults"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/searchStreamsGridView"
-        android:layout_below="@id/loadSearchResults"
+        android:layout_below="@id/resultsInfoEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:numColumns="4"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="More search results"
+        android:id="@+id/moreSearchResults"
+        android:layout_below="@id/searchStreamsGridView"
+        android:textSize="12dp"
+        android:onClick="moreSearchResults"/>
 
 </RelativeLayout>
