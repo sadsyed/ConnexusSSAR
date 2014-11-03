@@ -52,7 +52,7 @@ public class SearchResultsActivity extends Activity {
         EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
         searchQueryEditText.setText(searchQuery);
 
-        searchStreams(searchQuery);
+        performSearchRequest();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SearchResultsActivity extends Activity {
         EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
         String searchQuery = searchQueryEditText.getText().toString();
 
-        searchStreams(searchQuery);
+        performSearchRequest();
     }
 
     public void moreSearchResults(View view) {
@@ -94,30 +94,12 @@ public class SearchResultsActivity extends Activity {
     }
 
     protected void redrawStreams() {
-        Intent intent = getIntent();
         Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Redrawing streams for stream: " + searchQuery);
 
-        IntentFilter filter = new IntentFilter(SearchRequestReceiver.PROCESS_RESPONSE);
-        filter.addCategory((Intent.CATEGORY_DEFAULT));
-        redrawSearchRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
-        registerReceiver(redrawSearchRequestReceiver, filter);
-
-        //set the JSON request object
-        JSONObject requestJSON = new JSONObject();
-        try {
-            requestJSON.put("streamname", searchQuery);
-        } catch (Exception e) {
-            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Exception while creating a search request JSON object.");
-        }
-
-        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Starting SearchStreams request");
-        Intent msgIntent = new Intent(SearchResultsActivity.this, ConnexusIntentService.class);
-        msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.SEARCH_STREAM);
-        msgIntent.putExtra(ConnexusIntentService.REQUEST_JSON, requestJSON.toString());
-        startService(msgIntent);
+        performSearchRequest();
     }
 
-    private void searchStreams(String searchQuery) {
+    private void performSearchRequest() {
         IntentFilter filter = new IntentFilter(SearchRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory((Intent.CATEGORY_DEFAULT));
         searchRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
@@ -138,7 +120,6 @@ public class SearchResultsActivity extends Activity {
         startService(msgIntent);
     }
 
-    private void
 
     public class SearchRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";
