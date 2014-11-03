@@ -31,11 +31,9 @@ public class SearchResultsActivity extends Activity {
 
     private StreamParser streamParser = new StreamParser();
     private SearchRequestReceiver searchRequestReceiver;
-    private SearchRequestReceiver redrawSearchRequestReceiver;
 
     private String searchQuery;
     private List<Stream> allStreams = new ArrayList<Stream>();
-    //private List<Stream> streams = new ArrayList<Stream>();
     private int displayPicStart = 0;
     private int displayPicEnd = 8;
 
@@ -138,16 +136,12 @@ public class SearchResultsActivity extends Activity {
             allStreams = streamParser.jsonToStream(serviceUrl, responseJSON);
 
             //truncate streams to 8 streams
-            streams = new ArrayList<Stream>();
-
             if(allStreams.size() > 0) {
                 int streamCounter = 0;
-                //streamsLeftToView = allStreams.size();
                 for (Stream streamItem : allStreams) {
                     if (streamCounter >= displayPicStart && streamCounter < displayPicEnd) {
                         Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": " + String.valueOf(streamCounter) + ": " + streamItem.toString());
                         streams.add(streamItem);
-                        // allStreams.remove(streamItem);
                     }
                     streamCounter++;
                 }
@@ -162,7 +156,6 @@ public class SearchResultsActivity extends Activity {
             resultsInfoEditText.setText(allStreams.size() + " results for " + searchQuery +". Click on an image to view stream");
 
             gridView = (GridView) findViewById(R.id.searchStreamsGridView);
-            //gridView.setAdapter(new CustomAdapter(context, listOfStreamNames, listOfImages));
             gridView.setAdapter(new StreamAdapater(context, streams));
         }
     }
