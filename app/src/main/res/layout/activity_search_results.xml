@@ -12,14 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:hint="Find streams"
+        android:hint="@string/find_stream_edittext_hint"
         android:id="@+id/searchQueryEditText"
         android:textSize="12dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search"
+        android:text="@string/search_button_label"
         android:id="@+id/loadSearchResults"
         android:layout_below="@+id/searchQueryEditText"
         android:textSize="12dp"
@@ -52,7 +52,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="More search results"
+        android:text="@string/more_search_results_button_label"
         android:id="@+id/moreSearchResults"
         android:layout_below="@id/searchStreamsGridView"
         android:textSize="12dp"
