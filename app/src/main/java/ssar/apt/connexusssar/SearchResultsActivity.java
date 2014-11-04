@@ -30,7 +30,10 @@ public class SearchResultsActivity extends Activity {
     public static final String SEARCH_QUERY = "searchQuery";
 
     private StreamParser streamParser = new StreamParser();
-    private SearchRequestReceiver searchRequestReceiver;
+    private SearchRequestReceiver initRequestReceiver;
+    private SearchRequestReceiver loadRequestReceiver;
+    private SearchRequestReceiver redrawRequestReceiver;
+    private IntentFilter filter;
 
     private String searchQuery;
     private List<Stream> allStreams = new ArrayList<Stream>();
@@ -50,7 +53,8 @@ public class SearchResultsActivity extends Activity {
         EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
         searchQueryEditText.setText(searchQuery);
 
-        performSearchRequest();
+        initRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
+        performSearchRequest(initRequestReceiver);
     }
 
     @Override
@@ -72,11 +76,62 @@ public class SearchResultsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDestroy() {
+        unregisterSearchRequestReceiver();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        unregisterSearchRequestReceiver();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (initRequestReceiver != null) {
+            this.registerReceiver(initRequestReceiver, filter);
+        }
+        if (loadRequestReceiver != null) {
+            this.registerReceiver(loadRequestReceiver, filter);
+        }
+        if (redrawRequestReceiver != null) {
+            this.registerReceiver(redrawRequestReceiver, filter);
+        }
+        super.onResume();
+    }
+
+    private void unregisterSearchRequestReceiver () {
+        if(initRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(initRequestReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(loadRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(loadRequestReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+        if(redrawRequestReceiver != null) {
+            try {
+                this.unregisterReceiver(redrawRequestReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Error unregistering receiver: " + e.getMessage());
+            }
+        }
+    }
+
     public void loadSearchResults(View view) {
         EditText searchQueryEditText = (EditText) findViewById(R.id.searchQueryEditText);
         searchQuery = searchQueryEditText.getText().toString();
 
-        performSearchRequest();
+        loadRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
+        performSearchRequest(loadRequestReceiver);
     }
 
     public void moreSearchResults(View view) {
@@ -93,14 +148,14 @@ public class SearchResultsActivity extends Activity {
 
     protected void redrawStreams() {
         Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Redrawing streams for stream: " + searchQuery);
-
-        performSearchRequest();
+        redrawRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
+        performSearchRequest(redrawRequestReceiver);
     }
 
-    private void performSearchRequest() {
-        IntentFilter filter = new IntentFilter(SearchRequestReceiver.PROCESS_RESPONSE);
+    private void performSearchRequest(SearchRequestReceiver searchRequestReceiver) {
+        filter = new IntentFilter(SearchRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory((Intent.CATEGORY_DEFAULT));
-        searchRequestReceiver = new SearchRequestReceiver(ConnexusSSARConstants.SEARCH_STREAM);
+
         registerReceiver(searchRequestReceiver, filter);
 
         //set the JSON request object
