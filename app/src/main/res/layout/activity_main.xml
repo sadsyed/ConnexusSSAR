@@ -24,4 +24,14 @@
         android:layout_marginBottom="136dp"
         android:onClick="viewStreams"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_camera_button_label"
+        android:id="@+id/useCameraButton"
+        android:onClick="onUseCamera"
+        android:layout_alignTop="@+id/viewStreamsButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
