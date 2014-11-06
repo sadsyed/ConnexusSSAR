@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import java.util.List;
 
 import ssar.apt.connexusssar.types.StreamImage;
 import ssar.apt.connexusssar.types.StreamImageAdapter;
-import ssar.apt.connexusssar.util.ConnexusFileService;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
 import ssar.apt.connexusssar.types.Stream;
@@ -59,10 +57,6 @@ public class ViewAStreamActivity extends Activity {
         }
 
         setContentView(R.layout.activity_view_astream);
- //       double[] myLocation = ConnexusLocationService.getGPS(this);
- //       for(double val : myLocation) {
- //           Log.i(TAG, "Location is: " + Double.toString(val));
- //       }
 
         filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -105,13 +99,6 @@ public class ViewAStreamActivity extends Activity {
                 Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
             }
         }
-        if(uploadRequestReceiver != null) {
-            try {
-                this.unregisterReceiver(uploadRequestReceiver);
-            } catch (IllegalArgumentException e){
-                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
-            }
-        }
         if(redrawRequestReceiver != null) {
             try {
                 this.unregisterReceiver(redrawRequestReceiver);
@@ -131,13 +118,6 @@ public class ViewAStreamActivity extends Activity {
                 Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
             }
         }
-        if(uploadRequestReceiver != null) {
-            try {
-                this.unregisterReceiver(uploadRequestReceiver);
-            } catch (IllegalArgumentException e){
-                Log.i(TAG, "Error unregistering receiver: " + e.getMessage());
-            }
-        }
         if(redrawRequestReceiver != null) {
             try {
                 this.unregisterReceiver(redrawRequestReceiver);
@@ -153,23 +133,12 @@ public class ViewAStreamActivity extends Activity {
         if(requestReceiver != null) {
             this.registerReceiver(requestReceiver, filter);
         }
-        if(uploadRequestReceiver != null) {
-            this.registerReceiver(uploadRequestReceiver, filter);
-        }
         if(redrawRequestReceiver != null) {
             this.registerReceiver(redrawRequestReceiver, filter);
         }
         super.onResume();
     }
 
-    /** Called when the user clicks the View Streams button */
-    public void UploadImageFile(View view) {
-        //Select file
-        Intent intentChooser = new Intent();
-        intentChooser.setType("image/*");
-        intentChooser.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intentChooser, "Choose Picture"), 1);
-    }
 
     public void loadMorePictures(View view) {
         if(displayPicEnd < myImages.size()) {
@@ -184,6 +153,12 @@ public class ViewAStreamActivity extends Activity {
 
     public void loadAllStreams(View view) {
         Intent intent = new Intent(this, ViewStreamsActivity.class);
+        startActivity(intent);
+    }
+
+    public void UploadImage(View view) {
+        Intent intent = new Intent(this, UploadActivity.class);
+        intent.putExtra("Streamname", streamname);
         startActivity(intent);
     }
 
@@ -217,32 +192,7 @@ public class ViewAStreamActivity extends Activity {
         startService(msgIntent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(resultCode==RESULT_CANCELED)
-        {
-            // action cancelled
-        }
-        if(resultCode==RESULT_OK)
-        {
-            Uri selectedimg = data.getData();
-            String imagePath = ConnexusFileService.getRealPathFromURI(selectedimg, this);
-            Log.i(TAG, "Selected img path is: " + imagePath);
 
-            Intent intent = new Intent(this, ViewAStreamActivity.class);
-            filter = new IntentFilter(ConnexusViewAStreamRequestReceiver.PROCESS_RESPONSE);
-            filter.addCategory(Intent.CATEGORY_DEFAULT);
-            uploadRequestReceiver = new ConnexusViewAStreamRequestReceiver(ConnexusSSARConstants.UPLOAD_FILE);
-            registerReceiver(uploadRequestReceiver, filter);
-
-            Intent msgIntent = new Intent(ViewAStreamActivity.this, ConnexusIntentService.class);
-            msgIntent.putExtra(ConnexusIntentService.REQUEST_URL, ConnexusSSARConstants.UPLOAD_FILE);
-            msgIntent.putExtra("Streamname", streamname);
-            msgIntent.putExtra("ImagePath", imagePath);
-            startService(msgIntent);
-        }
-    }
 
     public class ConnexusViewAStreamRequestReceiver extends BroadcastReceiver {
         public static final String PROCESS_RESPONSE = "ssar.apt.intent.action";

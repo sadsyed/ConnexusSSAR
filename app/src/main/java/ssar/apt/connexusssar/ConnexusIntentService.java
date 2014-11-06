@@ -2,17 +2,8 @@ package ssar.apt.connexusssar;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import java.net.FileNameMap;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -23,21 +14,15 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 
-
-
-
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.net.FileNameMap;
 import java.net.URLConnection;
 
 import ssar.apt.connexusssar.util.ConnexusFileService;
@@ -89,6 +74,8 @@ public class ConnexusIntentService extends IntentService {
                 post.addHeader("Accept", "application/json");
                 post.addHeader("Content-type", "multipart/form-data");
                 post.addHeader("Streamname", intent.getStringExtra("Streamname"));
+                post.addHeader("DroidLatitude", intent.getStringExtra("latitude"));
+                post.addHeader("DroidLongitude", intent.getStringExtra("longitude"));
                 MultipartEntityBuilder builder = MultipartEntityBuilder.create();
                 builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                 String imagePath = intent.getStringExtra("ImagePath");

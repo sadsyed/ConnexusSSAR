@@ -9,9 +9,6 @@ import android.util.Log;
 
 import java.util.List;
 
-import ssar.apt.connexusssar.util.ConnexusFileService;
-import ssar.apt.connexusssar.util.ConnexusSSARConstants;
-
 /**
  * Created by Amy on 10/26/2014.
  */

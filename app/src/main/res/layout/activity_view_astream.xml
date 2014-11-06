@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:text="Upload An Image"
         android:id="@+id/uploadImageButton"
-        android:onClick="UploadImageFile"
+        android:onClick="UploadImage"
         android:layout_above="@+id/streamsButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

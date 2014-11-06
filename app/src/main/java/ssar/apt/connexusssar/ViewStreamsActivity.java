@@ -15,6 +15,8 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class ViewStreamsActivity extends Activity {
     private ConnexusRequestReceiver requestReceiver;
     private ConnexusRequestReceiver subscribeRequestReceiver;
     private IntentFilter filter;
+    private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
 
     GridView gridView;
     Context context;
