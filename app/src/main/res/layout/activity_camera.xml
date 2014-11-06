@@ -34,14 +34,6 @@
         android:layout_toEndOf="@+id/imageView"
         android:layout_marginBottom="60dp" />
 -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/surfaceView"
-        android:layout_toStartOf="@+id/surfaceView" />
 
     <SurfaceView
         android:layout_width="match_parent"
@@ -49,4 +41,33 @@
         android:id="@+id/surfaceView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:background="#A000">
+
+        <Button
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:text="Take a Picture"
+            android:onClick="onTakeAPicture"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="51dp"
+            android:id="@+id/button" />
+
+        <Button
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:text="Use this Pictue"
+            android:onClick="onUseThisPicture"
+            android:layout_alignTop="@+id/button"
+            android:layout_toRightOf="@+id/button"
+            android:layout_toEndOf="@+id/button"
+            android:layout_marginLeft="45dp" />
+     </RelativeLayout>
 </RelativeLayout>

@@ -25,12 +25,15 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.net.Uri;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 
-public class CameraActivity extends Activity implements SurfaceHolder.Callback {
+public class CameraActivity extends Activity implements SurfaceHolder.Callback, Camera.ShutterCallback, Camera.PictureCallback {
     private static final String CLASSNAME = CameraActivity.class.getName();
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private SurfaceView mSurfaceView;
@@ -57,42 +60,30 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         mCamera = Camera.open();
     }
 
+    public void onTakeAPicture(View view) {
+        mCamera.takePicture(this, null, null, this);
+    }
 
-    Camera.ShutterCallback mShutterCallback = new Camera.ShutterCallback() {
-        @Override
-        public void onShutter() {}
-    };
+    //Camera Callback Methods
+    @Override
+    public void onShutter() {
+        Toast.makeText(this, "Click!", Toast.LENGTH_SHORT).show();
+    }
 
-    Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
-        @Override
-        public void onPictureTaken(byte[] data, Camera c) {}
-    };
-
-    Camera.PictureCallback mjpeg = new Camera.PictureCallback() {
-        @Override
-        public void onPictureTaken(byte[] data, Camera c) {
-            if (data != null) {
-                tempData = data;
-                done();
-            }
+    @Override
+    public void onPictureTaken(byte[] data, Camera camera) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput("picture.jpg", Activity.MODE_PRIVATE);
+            fileOutputStream.write(data);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    };
 
-    void done() {
-        Bitmap bm = BitmapFactory.decodeByteArray(tempData, 0 , tempData.length);
-        String url = MediaStore.Images.Media.insertImage(getContentResolver(), bm, null, null);
-        bm.recycle();;
-        Bundle bundle = new Bundle();
-        if (url != null) {
-            bundle.putString("url", url);
-
-            Intent intent = new Intent();
-            intent.putExtras(bundle);
-            setResult(RESULT_OK, intent);
-        } else {
-            Toast.makeText(this, "Picture cannot be saved", Toast.LENGTH_SHORT).show();
-        }
-        finish();
+        mCamera.startPreview();
     }
 
     @Override
@@ -135,6 +126,8 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         Camera.Size selected = sizes.get(0);
         params.setPreviewSize(selected.width, selected.height);
         mCamera.setParameters(params);
+
+        mCamera.setDisplayOrientation(90);
         mCamera.startPreview();
     }
 
