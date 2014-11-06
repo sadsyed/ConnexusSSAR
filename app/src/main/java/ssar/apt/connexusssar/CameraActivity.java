@@ -260,7 +260,6 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": surfaceCreated");
         mCamera = Camera.open();
         mCamera.startPreview();
-
     }
 
     @Override
@@ -271,5 +270,4 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
         mCamera.release();
         mCamera = null;
     }
-
 }
