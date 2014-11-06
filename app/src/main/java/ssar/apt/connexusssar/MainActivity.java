@@ -144,6 +144,11 @@ public class MainActivity extends Activity {
         }
     }*/
 
-
+    /** Called whent the user clicks the Use Canera button */
+    public void onUseCamera(View view) {
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, "Camera Activity Test");
+        startActivity(intent);
+    }
 }
 

@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="ssar.apt.connexusssar.CameraActivity">
+
+    <TextView
+        android:text="Connexus!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+
+<!--    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/textView"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="36dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textView2"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView"
+        android:layout_marginBottom="60dp" />
+-->
+
+    <SurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/surfaceView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:background="#A000">
+
+        <Button
+            android:layout_width="150dip"
+            android:layout_height="50dip"
+            android:text="Take a Picture"
+            android:onClick="onTakeAPicture"
+            android:id="@+id/takeAPictureButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="150dip"
+            android:layout_height="50dip"
+            android:text="Use this Pictue"
+            android:onClick="onUseThisPicture"
+            android:layout_alignTop="@id/takeAPictureButton"
+            android:layout_toRightOf="@id/takeAPictureButton"
+            android:layout_toEndOf="@+id/takeAPictureButton"
+            android:layout_marginLeft="50dp" />
+
+        <Button
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:text="Streams"
+            android:onClick="onStreams"
+            android:layout_below="@id/takeAPictureButton"
+            android:layout_marginLeft="125dp"
+            android:id="@+id/button2"/>
+     </RelativeLayout>
+</RelativeLayout>

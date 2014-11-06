@@ -17,7 +17,14 @@
     <string name="hello_world">Search Results Activity</string>
     <string name="more_search_results_button_label">More search results</string>
     <string name="find_stream_edittext_hint">Find Stream</string>
+
     <string name="title_activity_nearby_streams">NearbyStreamsActivity</string>
+
     <string name="title_activity_upload">UploadActivity</string>
+
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="use_camera_button_label">Use Camera</string>
+
+    <string name="title_activity_camera_capture">CameraCaptureActivity</string>
 
 </resources>
