@@ -25,9 +25,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.net.Uri;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
@@ -35,13 +38,9 @@ import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 public class CameraActivity extends Activity implements SurfaceHolder.Callback, Camera.ShutterCallback, Camera.PictureCallback {
     private static final String CLASSNAME = CameraActivity.class.getName();
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+
     private SurfaceView mSurfaceView;
-    private SurfaceHolder mSurfaceHolder;
-    private LayoutInflater mInflater;
     Camera mCamera;
-    byte[] tempData;
-    boolean mPreviewRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +61,26 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 
     public void onTakeAPicture(View view) {
         mCamera.takePicture(this, null, null, this);
+    }
+
+    public Bitmap onUseThisPicture(View view) {
+        Bitmap bitmap = null;
+        try {
+            FileInputStream fileInputStream = openFileInput("picture.jpg");
+            //get the image
+            bitmap = BitmapFactory.decodeStream(fileInputStream);
+            fileInputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    public void onStreams(View view) {
+        Intent intent = new Intent(this, ViewStreamsActivity.class);
+        startActivity(intent);
     }
 
     //Camera Callback Methods
