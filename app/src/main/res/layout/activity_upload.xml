@@ -6,52 +6,58 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    tools:context="ssar.apt.connexusssar.UploadActivity">
 
-    <TextView
-        android:text="@string/connexus_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <EditText
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:hint="Gmail ID"
-        android:ems="10"
-        android:id="@+id/gmailId"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="59dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Gmail Password"
-        android:ems="10"
-        android:id="@+id/gmailPassword"
-        android:layout_below="@+id/gmailId"
+        android:text="Choose from your library"
+        android:id="@+id/chooseFromLibraryButton"
+        android:onClick="chooseImageFile"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/loginButton"
-        android:layout_below="@+id/gmailPassword"
-        android:onClick="login"
+        android:text="Use Camera"
+        android:id="@+id/useCameraButton"
+        android:layout_below="@+id/button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="58dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:hint="Add A Message and/or Tags."
+        android:ems="10"
+        android:id="@+id/comments"
+        android:layout_below="@id/useCameraButton"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/view_streams_button_label"
-        android:id="@+id/viewStreamsButton"
+        android:text="Upload"
+        android:id="@+id/uploadButton"
+        android:layout_below="@+id/comments"
+        android:onClick="uploadFile"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/loginButton"
-        android:layout_marginBottom="136dp"
-        android:onClick="viewStreams"/>
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stream: "
+        android:id="@+id/currentStream"
+        android:layout_below="@+id/uploadButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

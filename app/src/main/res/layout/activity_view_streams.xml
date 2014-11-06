@@ -54,4 +54,15 @@
         android:layout_toRightOf="@id/findStreamsEditText"
         android:textSize="12dp"
         android:onClick="searchStreams"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton2"
+        android:padding="0dip"
+        android:src="@drawable/earth"
+        android:onClick="nearbyStreams"
+        android:layout_toRightOf="@id/searchStreamButton"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>

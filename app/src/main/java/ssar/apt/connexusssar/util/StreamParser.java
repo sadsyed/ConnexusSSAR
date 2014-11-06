@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ssar.apt.connexusssar.types.Stream;
+import ssar.apt.connexusssar.types.StreamImage;
 
 /**
  * Created by ssyed on 10/16/14.
@@ -29,8 +30,8 @@ public class StreamParser {
         Stream stream = new Stream();
 
         try {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Request URL: " + serviceURL);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Response JSON: " + responseJSON);
+            Log.i(CLASSNAME, CLASSNAME + ": Request URL: " + serviceURL);
+            Log.i(CLASSNAME, CLASSNAME + ": Response JSON: " + responseJSON);
 
             json = new JSONObject(responseJSON);
 
@@ -42,10 +43,10 @@ public class StreamParser {
                     break;
             }
 
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Parse stream JSON to Java stream object:");
+            Log.i(CLASSNAME, CLASSNAME + ": Parse stream JSON to Java stream object:");
             stream = gson.fromJson(json.toString(), Stream.class);
         } catch (JSONException e) {
-            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + e);
+            Log.e(CLASSNAME, CLASSNAME + e);
         }
 
         return stream;
@@ -59,13 +60,13 @@ public class StreamParser {
         List<Stream> streams = new ArrayList<Stream>();
 
         try {
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Request URL: " + serviceURL);
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Response JSON: " + responseJSON);
+            Log.i(CLASSNAME, CLASSNAME + ": Request URL: " + serviceURL);
+            Log.i(CLASSNAME, CLASSNAME + ": Response JSON: " + responseJSON);
 
             json = new JSONObject(responseJSON);
             JSONArray jsonArray = new JSONArray();
 
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "Service url is: " + serviceURL);
+            Log.i(CLASSNAME, "Service url is: " + serviceURL);
 
 
             switch(serviceURL) {
@@ -88,20 +89,54 @@ public class StreamParser {
             } else if (ConnexusSSARConstants.MANAGE_STREAM.equals(serviceURL)) {
                 jsonArray = json.getJSONArray("subscribedstreamlist");
             }*/
-            Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": Parse stream JSON to Java stream object:");
+            Log.i(CLASSNAME, CLASSNAME + ": Parse stream JSON to Java stream object:");
             if(jsonArray.length() > 0 ) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Stream streamObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), Stream.class);
-                    Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": " + streamObj.toString());
                     streams.add(streamObj);
                 }
             } else {
-                Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, "jsonArray empty.");
+                Log.i(CLASSNAME, "jsonArray empty.");
             }
         } catch (JSONException e) {
-            Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + e);
+            Log.e(CLASSNAME, CLASSNAME + e);
         }
-
         return streams;
+    }
+    public List<StreamImage> jsonToStreamImages(String serviceURL, String responseJSON) {
+        JSONObject json;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Gson gson = gsonBuilder.create();
+        List<StreamImage> streamImages = new ArrayList<StreamImage>();
+
+        try {
+            Log.i(CLASSNAME, CLASSNAME + ": Request URL: " + serviceURL);
+            Log.i(CLASSNAME, CLASSNAME + ": Response JSON: " + responseJSON);
+
+            json = new JSONObject(responseJSON);
+            JSONArray jsonArray = new JSONArray();
+
+            Log.i(CLASSNAME, "Service url is: " + serviceURL);
+            switch(serviceURL) {
+                case ConnexusSSARConstants.NEARBY_STREAMS:
+                    jsonArray = json.getJSONArray("imageList");
+                    break;
+                default:
+                    break;
+            }
+            if(jsonArray.length() > 0 ) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    StreamImage streamImageObj = gson.fromJson(jsonArray.getJSONObject(i).toString(), StreamImage.class);
+                    //Log.i(CLASSNAME, CLASSNAME + streamImageObj.toString());
+                    streamImages.add(streamImageObj);
+                }
+            } else {
+                Log.i(CLASSNAME, "jsonArray empty.");
+            }
+        } catch (JSONException e) {
+            Log.e(CLASSNAME, CLASSNAME + e);
+        }
+        return streamImages;
     }
 }

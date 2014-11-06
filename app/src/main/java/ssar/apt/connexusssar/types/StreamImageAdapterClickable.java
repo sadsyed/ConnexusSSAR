@@ -1,6 +1,5 @@
 package ssar.apt.connexusssar.types;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -22,21 +20,21 @@ import java.util.List;
 
 import ssar.apt.connexusssar.R;
 import ssar.apt.connexusssar.ViewAStreamActivity;
-import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 
 /**
- * Created by Amy on 10/26/2014.
+ * Created by Amy on 11/2/2014.
  */
-public class StreamImageAdapter extends BaseAdapter {
+public class StreamImageAdapterClickable extends BaseAdapter {
 
     Context context;
     List<StreamImage> streamImages = new ArrayList<StreamImage>();
     private static String TAG = new String();
+    public final static String EXTRA_MESSAGE = "ssar.apt.connexusssar.MESSAGE";
 
     private static LayoutInflater layoutInflater = null;
 
-    public StreamImageAdapter(Context context, List<StreamImage> streamImages) {
-        TAG = StreamImageAdapter.class.getSimpleName();
+    public StreamImageAdapterClickable(Context context, List<StreamImage> streamImages) {
+        TAG = StreamImageAdapterClickable.class.getSimpleName();
         this.context = context;
         Log.i(TAG, "Context is for combine stream image adapter:" + context.toString());
         this.streamImages = streamImages;
@@ -68,24 +66,23 @@ public class StreamImageAdapter extends BaseAdapter {
         holder.imageView = (ImageView) rowView.findViewById(R.id.coverImage);
 
         //load the imagefile name
-        holder.textView.setText("");
+        holder.textView.setText(streamImages.get(position).getImageStreamName());
 
         //load the stream cover image using cover url
         LoadImage loadImage = new LoadImage(holder.imageView);
-        loadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, streamImages.get(position).getImageFileUrl());
-
-        /*rowView.setOnClickListener(new View.OnClickListener() {
+        if(loadImage != null) {
+            loadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, streamImages.get(position).getImageFileUrl());
+        } else {
+            Log.i(TAG, "load image equal null");
+        }
+        rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
-                //Need to launch the stream activity here.
                 Intent intent = new Intent(context, ViewAStreamActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, streams.get(position).getStreamname());
+                intent.putExtra(EXTRA_MESSAGE, streamImages.get(position).getImageStreamName());
                 context.startActivity(intent);
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
             }
-        });*/
-
+        });
         return rowView;
     }
 
@@ -99,6 +96,9 @@ public class StreamImageAdapter extends BaseAdapter {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            /*progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("Loading Streams.... ");
+            progressDialog.show();*/
         }
 
         @Override
@@ -118,7 +118,6 @@ public class StreamImageAdapter extends BaseAdapter {
             if (imgView != null) {
                 imgView.setImageDrawable(drawable);
             }
-
         }
     }
 

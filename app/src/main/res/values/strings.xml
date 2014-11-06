@@ -17,5 +17,7 @@
     <string name="hello_world">Search Results Activity</string>
     <string name="more_search_results_button_label">More search results</string>
     <string name="find_stream_edittext_hint">Find Stream</string>
+    <string name="title_activity_nearby_streams">NearbyStreamsActivity</string>
+    <string name="title_activity_upload">UploadActivity</string>
 
 </resources>
