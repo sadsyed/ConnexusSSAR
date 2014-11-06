@@ -12,5 +12,6 @@
     <string name="hello_world">Search Results Activity</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="use_camera_button_label">Use Camera</string>
+    <string name="title_activity_camera_capture">CameraCaptureActivity</string>
 
 </resources>
