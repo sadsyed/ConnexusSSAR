@@ -121,6 +121,13 @@ public class UploadActivity extends Activity {
         startActivityForResult(Intent.createChooser(intentChooser, "Choose Picture"), 1);
     }
 
+    /** Called when the user clicks the Use Camera button */
+    public void onUseCamera(View view) {
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, "Camera Activity Test");
+        startActivity(intent);
+    }
+
     public void uploadFile(View view) {
 
         filter = new IntentFilter(ConnexusUploadRequestReceiver.PROCESS_RESPONSE);
