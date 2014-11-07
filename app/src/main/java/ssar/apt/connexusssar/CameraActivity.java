@@ -182,6 +182,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
         }
         super.onPause();
         mCamera.stopPreview();
+        mCamera.release();
     }
 
     public void onResume() {
