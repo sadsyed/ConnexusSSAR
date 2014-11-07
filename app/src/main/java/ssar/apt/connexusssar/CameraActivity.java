@@ -214,6 +214,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 
         Camera.Size selected = sizes.get(0);
         params.setPreviewSize(selected.width, selected.height);
+        params.setRotation(90);
         mCamera.setParameters(params);
 
         mCamera.setDisplayOrientation(90);
