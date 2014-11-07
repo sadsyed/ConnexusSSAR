@@ -124,7 +124,7 @@ public class UploadActivity extends Activity {
     /** Called when the user clicks the Use Camera button */
     public void onUseCamera(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, "Camera Activity Test");
+        intent.putExtra("Streamname", streamname);
         startActivity(intent);
     }
 

@@ -14,8 +14,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.Camera" />
-    <uses-feature android:name="android.hardware.screen.portrait" />
-
+    <!--<uses-feature android:name="android.hardware.screen.portrait" />-->
 
     <application
         android:allowBackup="true"
