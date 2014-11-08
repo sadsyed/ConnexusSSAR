@@ -9,10 +9,13 @@
     tools:context="ssar.apt.connexusssar.ViewStreamsActivity">
 
     <TextView
-        android:text="@string/connexus_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/viewStreamTitle" />
+        android:id="@+id/viewStreamTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/connexus_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <GridView
         android:layout_width="wrap_content"
