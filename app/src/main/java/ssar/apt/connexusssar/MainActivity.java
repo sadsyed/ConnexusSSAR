@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
+import ssar.apt.connexusssar.util.UserStore;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -36,8 +38,7 @@ public class MainActivity extends Activity {
     ConnexusLocationService locationservice;
     Context mContext = MainActivity.this;
     AccountManager mAccountManager;
-    String token;
-    int serverCode;
+    UserStore userStore;
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
 
 
@@ -117,6 +118,15 @@ public class MainActivity extends Activity {
 
     public void login(View view) {
         Log.i(TAG, "Login clicked");
+        TextView usernameTextView = (TextView) findViewById(R.id.gmailId);
+        TextView passwordTextView = (TextView) findViewById(R.id.gmailPassword);
+        usernameTextView.getText();
+        userStore = UserStore.getInstance();
+        String pass = passwordTextView.getText().toString().trim();
+        String user = usernameTextView.getText().toString().trim();
+        userStore.setUserPassword(user,pass);
+        Log.i(TAG, "The user saved is: " + userStore.getUser());
+        Log.i(TAG, "The user password saved is: " + userStore.getPassword());
     }
 
     /** Called when the user clicks the View Streams button */

@@ -26,6 +26,7 @@ import ssar.apt.connexusssar.types.StreamAdapater;
 import ssar.apt.connexusssar.types.Stream;
 import ssar.apt.connexusssar.util.ConnexusSSARConstants;
 import ssar.apt.connexusssar.util.StreamParser;
+import ssar.apt.connexusssar.util.UserStore;
 
 
 public class ViewStreamsActivity extends Activity {
@@ -149,7 +150,10 @@ public class ViewStreamsActivity extends Activity {
         JSONObject requestJSON = new JSONObject();
         try {
             //TODO: Remove the hardcoded userid
-            requestJSON.put("userid", "sh.sadaf@gmail.com");
+            UserStore userStore = UserStore.getInstance();
+            String tmpUser = userStore.getUser();
+            Log.i(TAG, "The user is: " + tmpUser);
+            requestJSON.put("userid", tmpUser);
         } catch (Exception e) {
             Log.e(TAG, "Exception while creating an request JSON.");
         }
