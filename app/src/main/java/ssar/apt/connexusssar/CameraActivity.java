@@ -173,6 +173,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 
     @Override
     public void onPause () {
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": onPause....");
         if(uploadRequestReceiver != null) {
             try {
                 this.unregisterReceiver(uploadRequestReceiver);
@@ -181,11 +182,12 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
             }
         }
         super.onPause();
-        mCamera.stopPreview();
-        mCamera.release();
+        //mCamera.stopPreview();
+        //mCamera.release();
     }
 
     public void onResume() {
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": onResume....");
         if(uploadRequestReceiver != null) {
             this.registerReceiver(uploadRequestReceiver, filter);
         }
@@ -195,6 +197,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 
     @Override
     public void onDestroy() {
+        Log.i(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": onDestroy....");
         if(uploadRequestReceiver != null) {
             try {
                 this.unregisterReceiver(uploadRequestReceiver);
@@ -203,7 +206,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
             }
         }
         super.onDestroy();
-        mCamera.release();
+        //mCamera.release();
     }
 
     @Override
@@ -234,6 +237,10 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.e(ConnexusSSARConstants.CONNEXUSSSAR_DEBUG_TAG, CLASSNAME + ": surfaceDestroyed");
+        mSurfaceView.getHolder().removeCallback(this);
+
+        mCamera.stopPreview();
+        mCamera.release();
     }
 
     public class ConnexusCameraUploadRequestReceiver extends BroadcastReceiver {
