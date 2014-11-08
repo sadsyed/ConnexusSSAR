@@ -149,10 +149,13 @@ public class ViewStreamsActivity extends Activity {
         //set the JSON request object
         JSONObject requestJSON = new JSONObject();
         try {
-            //TODO: Remove the hardcoded userid
             UserStore userStore = UserStore.getInstance();
             String tmpUser = userStore.getUser();
             Log.i(TAG, "The user is: " + tmpUser);
+            if(tmpUser.equals("")) {
+                Toast.makeText(ViewStreamsActivity.this, "You must be logged into google on this device to retrieve subscribed streams.",
+                        Toast.LENGTH_SHORT).show();
+            }
             requestJSON.put("userid", tmpUser);
         } catch (Exception e) {
             Log.e(TAG, "Exception while creating an request JSON.");

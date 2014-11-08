@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,24 +49,18 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         locationservice = new ConnexusLocationService(this);
         syncGoogleAccount();
+        TextView currentUserTextView = (TextView) findViewById(R.id.currentUserTextView);
+        currentUserTextView.setVisibility(View.INVISIBLE);
     }
 
     public void syncGoogleAccount() {
         if (isNetworkAvailable() == true) {
             String[] accountarrs = getAccountNames();
             if (accountarrs.length > 0) {
-                //you can set here account for login
                 Log.i(TAG, "First account is: " + accountarrs[0]);
                 Log.i(TAG, "The account array size is: " + Integer.toString(accountarrs.length));
-                try {
-                   // new GetTokenTask().execute("aimers1975@gmail.com", mContext);
-
-                } catch (Exception e) {
-                    Log.i(TAG, "The exception is: " + e.getMessage());
-                }
             } else {
-                Toast.makeText(MainActivity.this, "No Google Account Sync!",
-                        Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "No google account sync.");
             }
         } else {
             Toast.makeText(MainActivity.this, "No Network Service!",
@@ -85,7 +80,6 @@ public class MainActivity extends Activity {
     }
 
     public boolean isNetworkAvailable() {
-
         ConnectivityManager cm = (ConnectivityManager) mContext
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
@@ -118,15 +112,42 @@ public class MainActivity extends Activity {
 
     public void login(View view) {
         Log.i(TAG, "Login clicked");
+        Button loginButton = (Button) findViewById(R.id.loginButton);
         TextView usernameTextView = (TextView) findViewById(R.id.gmailId);
         TextView passwordTextView = (TextView) findViewById(R.id.gmailPassword);
-        usernameTextView.getText();
-        userStore = UserStore.getInstance();
-        String pass = passwordTextView.getText().toString().trim();
-        String user = usernameTextView.getText().toString().trim();
-        userStore.setUserPassword(user,pass);
-        Log.i(TAG, "The user saved is: " + userStore.getUser());
-        Log.i(TAG, "The user password saved is: " + userStore.getPassword());
+        TextView currentUserTextView = (TextView) findViewById(R.id.currentUserTextView);
+        String isLoggedIn = loginButton.getText().toString();
+        if (isLoggedIn.equals("Login")) {
+            String[] accountarrs = getAccountNames();
+            usernameTextView.getText();
+            userStore = UserStore.getInstance();
+            String pass = passwordTextView.getText().toString().trim();
+            String user = usernameTextView.getText().toString().trim();
+            userStore.setUserPassword(user, pass);
+            for (int i = 0; i < accountarrs.length; i++) {
+                if (user.equals(accountarrs[i])) {
+                    Log.i(TAG, "Login successful");
+                    currentUserTextView.setText("Current user is: " + user);
+                    currentUserTextView.setVisibility(View.VISIBLE);
+                    usernameTextView.setVisibility(View.INVISIBLE);
+                    passwordTextView.setVisibility(View.INVISIBLE);
+                    loginButton.setText("Log out");
+                    break;
+                }
+            }
+            if(loginButton.getText().toString().equals("Login")) {
+                currentUserTextView.setText("No accounts found on this device for that user.");
+                currentUserTextView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            usernameTextView.setText("");
+            passwordTextView.setText("");
+            currentUserTextView.setVisibility(View.INVISIBLE);
+            usernameTextView.setVisibility(View.VISIBLE);
+            passwordTextView.setVisibility(View.VISIBLE);
+            loginButton.setText("Login");
+            userStore.setUserPassword("","");
+        }
     }
 
     /** Called when the user clicks the View Streams button */
@@ -136,22 +157,5 @@ public class MainActivity extends Activity {
         intent.putExtra(EXTRA_MESSAGE, "View Streams Activity Test");
         startActivity(intent);
     }
-    /*private class GetTokenTask extends AsyncTask<String, void, void> {
-        protected Long doInBackground(String email) {
-            try {
-                GoogleAuthUtil.getToken(mContext,"aimers1975@gmail.com",SCOPE);
-            } catch (Exception e) {
-                Log.i(TAG, "Exception getting token: " + e.getMessage());
-            }
-        }
-
-        protected void onProgressUpdate() {
-
-        }
-
-        protected void onPostExecute() {
-
-        }
-    }*/
 }
 

@@ -73,19 +73,6 @@ public class StreamImageAdapter extends BaseAdapter {
         //load the stream cover image using cover url
         LoadImage loadImage = new LoadImage(holder.imageView);
         loadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, streamImages.get(position).getImageFileUrl());
-
-        /*rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
-                //Need to launch the stream activity here.
-                Intent intent = new Intent(context, ViewAStreamActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, streams.get(position).getStreamname());
-                context.startActivity(intent);
-                Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
-            }
-        });*/
-
         return rowView;
     }
 

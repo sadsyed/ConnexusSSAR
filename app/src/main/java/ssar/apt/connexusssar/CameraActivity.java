@@ -133,7 +133,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
     //Camera Callback Methods
     @Override
     public void onShutter() {
-        Toast.makeText(this, "Click!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Click!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -256,6 +256,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
             }
             try {
                 String imageFileUrl = (String)json.get("file");
+                Toast.makeText(context, "File upload success!", Toast.LENGTH_LONG).show();
                 Log.i(CLASSNAME,"Files successfully uploaded: " + imageFileUrl);
             } catch (JSONException exception) {
                 Log.i(CLASSNAME,"File upload failed.");
