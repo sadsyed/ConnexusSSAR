@@ -87,7 +87,7 @@ public class StreamAdapater extends BaseAdapter {
             Intent intent = new Intent(context, ViewAStreamActivity.class);
              intent.putExtra(EXTRA_MESSAGE, streams.get(position).getStreamname());
             context.startActivity(intent);
-            Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "You clicked " + streams.get(position).getStreamname(), Toast.LENGTH_LONG).show();
             }
         });
 
